@@ -1,0 +1,10 @@
+{
+    "name": "graphing",
+    "stassets": {
+        "root": "./src/client",
+        "verbose": true,
+        "additionalTypes": [
+            "d3/**/*"
+        ]
+    }
+}

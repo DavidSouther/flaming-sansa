@@ -1,0 +1,17 @@
+ion-tabs.tabs-balanced
+    //- ion-tab(
+    //-     ng-repeat="demo in demos"
+    //-     title="{{demo}}"
+    //-     ui-sref="demo.{{demo}}"
+    //- )
+    //-     ion-nav-view(name="demo-{{demo}}")
+    ion-tab(
+        title="Trig"
+        ui-sref="demo.trig"
+    )
+        ion-nav-view(name="demo-trig")
+    ion-tab(
+        title="Bar"
+        ui-sref="demo.bar"
+    )
+        ion-nav-view(name="demo-bar")

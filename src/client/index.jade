@@ -1,0 +1,18 @@
+doctype
+html(ng-app="graphing.demos")
+    head
+        title ng graphing
+        link(href="vendors.css", type="text/css", rel="stylesheet")
+        link(href="all.css", type="text/css", rel="stylesheet")
+    body
+        ion-nav-bar.bar-calm.nav-title-slide
+            ion-nav-back-button.button-icon.ion-arrow-left-c
+
+        ion-nav-view(
+            name="demo-tabs"
+            animation="slide-left-right"
+        )
+
+        script(src="vendors.js")
+        script(src="templates.js")
+        script(src="application.js")

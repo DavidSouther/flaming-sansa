@@ -105,8 +105,8 @@ angular.module("graphing.scales", [
                     var $exp = $parse(attrs.graphScales);
                     var setScales = (function setScales(){
                         // Get the bounds of the parent element
-                        var height = $element[0].parentNode.offsetHeight;
-                        var width = $element[0].parentNode.offsetWidth;
+                        var height = $element[0].offsetHeight;
+                        var width = $element[0].offsetWidth;
 
                         // Reset the scales
                         $scope.$scales = {};

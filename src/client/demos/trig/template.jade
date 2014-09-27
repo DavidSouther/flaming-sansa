@@ -70,6 +70,25 @@ ion-view(title="Trig Demo")
                         from="[ x.scaled.zero, value.y ]"
                         to="[ value.x, value.y ]"
                     )
+                    line.exsecant(
+                        from="[x.scaled.zero, y.scaled.zero]"
+                        to="[ \
+                            $scales.x(Math.sign(Math.cos(time))), \
+                            $scales.y(- Math.sin(time) / Math.cos(time)) \
+                        ]\
+                        "
+                    )
+                    line.tangent(
+                        from="[ \
+                            $scales.x(Math.sign(Math.cos(time))), \
+                            y.scaled.zero \
+                        ]"
+                        to="[ \
+                            $scales.x(Math.sign(Math.cos(time))), \
+                            $scales.y(-Math.sin(time) / Math.cos(time)) \
+                        ]\
+                        "
+                    )
                     line.hypotenuse(
                         from="[ x.scaled.zero, y.scaled.zero ]"
                         to="[value.x, value.y]"

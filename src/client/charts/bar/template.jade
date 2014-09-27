@@ -1,0 +1,22 @@
+svg.chart.chart-bar(
+    width='100%'
+    height='100%'
+    graph-scales="{\
+        x: ['linear', $chartData.$x.$min, $chartData.$x.$max],\
+        y: ['linear', $chartData.$y.$min, $chartData.$y.$max],\
+    }"
+    shape-rendering="geometricPrecision"
+)
+    g.decor
+    g.graph
+        path(
+            ng-attr-d="{{ chartData | path:$chartOptions:$scales.x:$scales.y }}"
+        )
+        circle(
+            ng-repeat="point in chartData"
+            center="[ \
+                $scales.x($chartOptions.x(point)), \
+                $scales.y($chartOptions.y(point)) \
+            ]"
+            r="4"
+        )

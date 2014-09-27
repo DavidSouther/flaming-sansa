@@ -1,5 +1,5 @@
 angular.module('graphing.demos.bar', [
-    'graphing.scales'
+    'graphing.charts.bar'
     'demos.bar.template'
 ])
 .config ($stateProvider)->
@@ -8,9 +8,8 @@ angular.module('graphing.demos.bar', [
         views:
             'demo-bar':
                 template: '<bar-demo />'
-
 .directive 'barDemo', ->
     restrict: 'E'
     templateUrl: 'demos/bar'
     controller: ($scope, SalesData)->
-        $scope.demoData = SalesData
+        $scope.demoData = SalesData.map (_, i)-> {year: i + 1980, sales: _}

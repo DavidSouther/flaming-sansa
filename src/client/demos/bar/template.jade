@@ -1,4 +1,7 @@
-ion-view(title="Trig Demo")
-    ion-content.padding
+ion-view(title="Bar Demo")
+    ion-content.padding#bar-demo
         h1 Bar Demo
-        | {{ demoData }}
+        bar-chart(
+            chart-data="demoData"
+            chart-options="{x: 'year', y: 'sales'}"
+        )

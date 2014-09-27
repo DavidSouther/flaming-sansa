@@ -98,7 +98,7 @@ angular.module("graphing.scales", [
 })
 .directive('graphScales', function($parse){
     return {
-        priority: 10000,
+        priority: 400,
         compile: function(){
             return {
                 pre: function($scope, $element, attrs){

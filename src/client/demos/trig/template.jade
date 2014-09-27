@@ -7,13 +7,13 @@ ion-view(title="Trig Demo")
                 y.max = (260 * (x.max - x.min)) * (1 / (2 * 760));\
                 y.min = -y.max;\
             "
+            graph-scales="{\
+                x: ['linear', x.min, x.max],\
+                y: ['linear', y.min, y.max],\
+            }"
         )
             g.vis.trig(
                 ng-controller="TrigCtrl"
-                graph-scales="{\
-                    x: ['linear', x.min, x.max],\
-                    y: ['linear', y.min, y.max],\
-                }"
                 ng-init="\
                     time = 0;\
                     delta = .015 / 2;\
@@ -74,7 +74,10 @@ ion-view(title="Trig Demo")
                         from="[x.scaled.zero, y.scaled.zero]"
                         to="[ \
                             $scales.x(Math.sign(Math.cos(time))), \
-                            $scales.y(- Math.sin(time) / Math.cos(time)) \
+                            $scales.y(\
+                                -Math.sign(Math.sin(time)) * \
+                                Math.abs(Math.sin(time) / Math.cos(time)) \
+                            ) \
                         ]\
                         "
                     )
@@ -85,7 +88,10 @@ ion-view(title="Trig Demo")
                         ]"
                         to="[ \
                             $scales.x(Math.sign(Math.cos(time))), \
-                            $scales.y(-Math.sin(time) / Math.cos(time)) \
+                            $scales.y(\
+                                -Math.sign(Math.sin(time)) * \
+                                Math.abs(Math.sin(time) / Math.cos(time)) \
+                            ) \
                         ]\
                         "
                     )
@@ -103,3 +109,9 @@ ion-view(title="Trig Demo")
                     )
                     text.label(at="[2, 24]")
                         | R = {{ Math.floor( time / Math.PI ) }}
+                    //- text.label(at="[2, 48]")
+                    //-     | Sin = {{ Math.sin(time) }}
+                    //- text.label(at="[2, 72]")
+                    //-     | Cos = {{ Math.cos(time) }}
+                    //- text.label(at="[2, 96]")
+                    //-     | Tan = {{ Math.sin(time) / Math.cos(time) }}

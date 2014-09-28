@@ -4,11 +4,12 @@
   "description": "Angular SVG Primitives and Graphs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ng-stassets": "0.0.13"
+    "ng-stassets": "^0.0.14"
   }
 }

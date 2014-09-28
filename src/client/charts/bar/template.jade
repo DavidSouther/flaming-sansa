@@ -20,9 +20,5 @@ svg.chart.chart-bar(
                     {{ $scales.y($chartOptions.y(point)) }}px \
                 )\
             }"
-            center="[ \
-                $scales.x($chartOptions.x(point)), \
-                $scales.y($chartOptions.y(point)) \
-            ]"
         )
             circle( cx=0, cy=0, r=4 )

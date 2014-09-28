@@ -2,7 +2,7 @@ angular.module('graphing.charts.bar', [
     'graphing.scales'
     'charts.bar.template'
 ])
-.directive 'barChart', ->
+.directive 'barChart', ($animate)->
     restrict: 'AE'
     templateUrl: 'charts/bar'
     scope:

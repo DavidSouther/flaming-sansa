@@ -9,14 +9,20 @@ svg.chart.chart-bar(
 )
     g.decor
     g.graph
-        path(
-            ng-attr-d="{{ chartData | path:$chartOptions:$scales.x:$scales.y }}"
+        path.line(
+            draw-path=" chartData | path:$chartOptions:$scales.x:$scales.y "
         )
-        circle(
+        g.point(
             ng-repeat="point in chartData"
+            style="\
+                transform: translate(\
+                    {{ $scales.x($chartOptions.x(point)) }}px, \
+                    {{ $scales.y($chartOptions.y(point)) }}px \
+                )\
+            }"
             center="[ \
                 $scales.x($chartOptions.x(point)), \
                 $scales.y($chartOptions.y(point)) \
             ]"
-            r="4"
         )
+            circle( cx=0, cy=0, r=4 )

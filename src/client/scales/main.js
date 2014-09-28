@@ -227,14 +227,10 @@ angular.module("graphing.scales", [
     return {
         priority: 650,
         restrict: 'E',
-        // compile: function(){
-        //     return {
-        //     }
-        // }
         link: function($scope, $element){
             var set = function set(){
-                $scope.$width = $element[0].parentNode.offsetWidth;
-                $scope.$height = $element[0].parentNode.offsetWidth;
+                $scope.$width = $element[0].offsetWidth;
+                $scope.$height = $element[0].offsetWidth;
             };
             set();
             $rootScope.$on('Window Resized', set);

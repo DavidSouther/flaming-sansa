@@ -1,11 +1,18 @@
 ion-view(title="Trig Demo")
     ion-content.padding#trig-demo
+        //- ng-init to set a variety of initial values.
         svg(
+            width='760px'
+            height='260px'
             ng-init="\
                 x = { min: -1.2, max: 5 };\
                 y = {};\
                 y.max = (260 * (x.max - x.min)) * (1 / (2 * 760));\
                 y.min = -y.max;\
+                \
+                time = 0;\
+                delta = .015 / 2;\
+                value = {x: Math.PI, y: 0};\
             "
             graph-scales="{\
                 x: ['linear', x.min, x.max],\
@@ -15,14 +22,6 @@ ion-view(title="Trig Demo")
             g.vis.trig(
                 ng-controller="TrigCtrl"
                 ng-init="\
-                    time = 0;\
-                    delta = .015 / 2;\
-                    value = {x: Math.PI, y: 0};\
-                "
-                graph-tick="\
-                    time = time + delta;\
-                    value.x = $scales.x(  Math.cos(time) );\
-                    value.y = $scales.y( -Math.sin(time) );\
                     x.scaled = { \
                         min: $scales.x(x.min), \
                         max: $scales.x(x.max), \
@@ -35,6 +34,11 @@ ion-view(title="Trig Demo")
                         zero: $scales.y(0), \
                         PI: $scales.y(Math.PI) \
                     }; \
+                "
+                graph-tick="\
+                    time = time + delta;\
+                    value.x = $scales.x(  Math.cos(time) );\
+                    value.y = $scales.y( -Math.sin(time) );\
                 "
             )
                 g.decor
@@ -59,7 +63,7 @@ ion-view(title="Trig Demo")
                         )
 
                 g.graph
-                    path.path(
+                    path.sine(
                         ng-attr-d="{{ data | path:sine:$scales.x:$scales.y }}"
                     )
                     line.sine(

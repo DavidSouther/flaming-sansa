@@ -1,4 +1,5 @@
 angular.module('graphing.demos.bar', [
+    'graphing.svg'
     'graphing.charts.bar'
     'demos.bar.template'
 ])

@@ -1,6 +1,3 @@
-/* global d3_svg_lineHermite: true */
-/* global d3_svg_lineMonotoneTangents: true */
-
 var Scales = {
     linear: function(a, b, x, y){
         var brange = b - a;
@@ -59,46 +56,6 @@ angular.module('graphing.scales', [
         }
     };
 })
-.filter('pathFn', function(){
-    return function PathFn(valfunc, tmin, tmax, tstep, tscale, xscale, yscale){
-        function getVal(t){
-            t = tscale(t);
-            var val = valfunc(t), x, y;
-            if(val.length){
-                y = val[1];
-                x = val[0];
-            } else {
-                y = val;
-                x = t;
-            }
-            return [xscale(x), yscale(y)];
-        }
-        var points = [];
-
-        while(tmin <= tmax) {
-            points.push(getVal(tmin));
-            tmin += tstep;
-        }
-
-        var p0 = points[0];
-        var m = '' + p0[0] + ',' + p0[1];
-
-        var path = 'M' + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
-        return path;
-    };
-})
-.filter('path', function(){
-    return function Path(data, interp, xscale, yscale){
-        var points = data.map(function(d, i){
-            return [xscale(interp.x(d, i)), yscale(interp.y(d, i))];
-        });
-        var p0 = points[0];
-        var m = '' + p0[0] + ',' + p0[1];
-
-        var path = 'M' + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
-        return path;
-    };
-})
 .directive('graphScales', function($parse){
     return {
         priority: 400,
@@ -139,42 +96,6 @@ angular.module('graphing.scales', [
                     $scope.$on('Window Resized', setScales);
                 }
             };
-        }
-    };
-})
-
-.directive('svg', function($rootScope){
-    return {
-        priority: 650,
-        restrict: 'E',
-        link: function($scope, $element){
-            var set = function set(){
-                $scope.$width = $element[0].offsetWidth;
-                $scope.$height = $element[0].offsetWidth;
-            };
-            set();
-            $rootScope.$on('Window Resized', set);
-        }
-    };
-})
-.directive('graphTick', function($parse, $window){
-    return {
-        priority: -1000,
-        link: function($scope, $element, $attrs){
-            var frame = $window.requestAnimationFrame =
-                $window.requestAnimationFrame ||
-                $window.mozRequestAnimationFrame ||
-                $window.webkitRequestAnimationFrame ||
-                $window.oRequestAnimationFrame
-            ;
-
-            var step = function step(){
-                $scope.$apply(function(){
-                    $scope.$eval($attrs.graphTick);
-                });
-                frame(step);
-            };
-            frame(step);
         }
     };
 })

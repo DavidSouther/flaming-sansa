@@ -37,9 +37,11 @@ module.exports = (grunt)->
 
     # butt - Browser Under Test Tools
     butt = []
-    unless process.env['DEBUG']
-        if process.env['BAMBOO']
+    unless process.env.DEBUG
+        if process.env.BAMBOO
             butt = ['PhantomJS']
+        else if process.env.TRAVIS
+            butt = ['Firefox']
         else
             butt = ['Chrome']
 

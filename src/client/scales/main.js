@@ -1,3 +1,6 @@
+/* global d3_svg_lineHermite: true */
+/* global d3_svg_lineMonotoneTangents: true */
+
 var Scales = {
     linear: function(a, b, x, y){
         var brange = b - a;
@@ -14,12 +17,12 @@ var Scales = {
         function log10(z){
             return Math.log(z) / Math.LN10;
         }
-        var linA = a == 0 ? 0 : log10(a);
-        var linB = b == 0 ? 0 : log10(b);
-        linear = Scales.linear(linA, linB, x, y);
+        var linA = a === 0 ? 0 : log10(a);
+        var linB = b === 0 ? 0 : log10(b);
+        var linear = Scales.linear(linA, linB, x, y);
         return function Scale(z){
             return linear(log10(z));
-        }
+        };
     },
     threshold: function(domain, range){
         var buckets = domain.length;
@@ -27,13 +30,13 @@ var Scales = {
             var i = -1, x = null;
             do {
                 x = domain[++i];
-            } while(i < domain.length && x < z);
+            } while(i < buckets && x < z);
             return range[i];
-        }
+        };
     }
 };
 
-angular.module("graphing.scales", [
+angular.module('graphing.scales', [
 
 ])
 .run(function($window, $rootScope){
@@ -41,7 +44,7 @@ angular.module("graphing.scales", [
     $window.onresize = function(){
         $rootScope.$broadcast('Window Resized');
         $rootScope.$digest();
-    }
+    };
 })
 .run(function($window, $rootScope){
     $rootScope.TWO_PI = 2 * Math.PI;
@@ -54,7 +57,7 @@ angular.module("graphing.scales", [
         } else {
             return value;
         }
-    }
+    };
 })
 .filter('pathFn', function(){
     return function PathFn(valfunc, tmin, tmax, tstep, tscale, xscale, yscale){
@@ -80,21 +83,21 @@ angular.module("graphing.scales", [
         var p0 = points[0];
         var m = '' + p0[0] + ',' + p0[1];
 
-        var path = "M" + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
+        var path = 'M' + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
         return path;
-    }
+    };
 })
 .filter('path', function(){
     return function Path(data, interp, xscale, yscale){
         var points = data.map(function(d, i){
-            return [xscale(interp.x(d, i)), yscale(interp.y(d, i))]
+            return [xscale(interp.x(d, i)), yscale(interp.y(d, i))];
         });
         var p0 = points[0];
         var m = '' + p0[0] + ',' + p0[1];
 
-        var path = "M" + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
+        var path = 'M' + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
         return path;
-    }
+    };
 })
 .directive('graphScales', function($parse){
     return {
@@ -118,8 +121,8 @@ angular.module("graphing.scales", [
                             // The scale object is an array
                             var type = scale.shift();
                             var maxima = 0, minima = 0;
-                            if (name == "x" || name == "y"){
-                                var maxima = {
+                            if (name === 'x' || name === 'y'){
+                                maxima = {
                                     x: width,
                                     y: height
                                 }[name] || scale[2] || ((width + height) / 2);
@@ -137,7 +140,7 @@ angular.module("graphing.scales", [
                 }
             };
         }
-    }
+    };
 })
 
 .directive('svg', function($rootScope){
@@ -152,7 +155,7 @@ angular.module("graphing.scales", [
             set();
             $rootScope.$on('Window Resized', set);
         }
-    }
+    };
 })
 .directive('graphTick', function($parse, $window){
     return {
@@ -173,6 +176,6 @@ angular.module("graphing.scales", [
             };
             frame(step);
         }
-    }
+    };
 })
 ;

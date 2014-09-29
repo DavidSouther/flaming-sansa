@@ -7,14 +7,14 @@ function ScatterPointDirective(
         var scatterPoint = {
             selector: '.' + className,
             definition:
-                "transform: translate(" + x + "px, " + y +"px);\n" +
-                "transition: " + time + "s ease-out transform;"
+                'transform: translate(' + x + 'px, ' + y +'px);\n' +
+                'transition: ' + time + 's ease-out transform;'
         };
 
         var active = {
-            selector: "." + className + ".ng-enter-active",
-            definition: "transform: translate(" + x + "px, 0);"
-        }
+            selector: '.' + className + '.ng-enter-active',
+            definition: 'transform: translate(' + x + 'px, 0);'
+        };
 
         StyleManager.addRules([scatterPoint, active]);
 
@@ -25,7 +25,6 @@ function ScatterPointDirective(
         restrict: 'A',
         link: function scatterPointPostLink($scope, $element, $attrs){
             var lastAnimation = null;
-            var element = $element[0];
             var $exp = $parse($attrs.scatterPoint);
 
             $scope.$watchCollection(
@@ -34,12 +33,11 @@ function ScatterPointDirective(
                 }, function setFrom(value){
                     if(value){
                         if(lastAnimation){
-                            $animation.cancel(lastAnimation);
+                            $animate.cancel(lastAnimation);
                         }
                         var x = value[0], y = value[1];
 
                         var className = scatterPointDestination(x, y);
-                        // $element.addClass(className);
 
                         $timeout(function(){
                             lastAnimation = $animate.addClass(
@@ -48,17 +46,17 @@ function ScatterPointDirective(
                                 function(){
                                     // removeDrawPath(className);
                                 }
-                            )
+                            );
                         });
                     }
                 }
             );
         }
-    }
+    };
 }
 
 ScatterPointDirective.$inject = [
-    "$parse", "$animate", "$timeout", "StyleManager"
+    '$parse', '$animate', '$timeout', 'StyleManager'
 ];
 
 angular.module('graphing.svg.scatterPoint', [

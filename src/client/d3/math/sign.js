@@ -1,6 +1,6 @@
 Math.sign = function sign(x) {
-    x = +x // convert to a number
+    x = +x; // convert to a number
     if (x === 0 || isNaN(x))
-        return x
-    return x > 0 ? 1 : -1
+        return x;
+    return x > 0 ? 1 : -1;
 };

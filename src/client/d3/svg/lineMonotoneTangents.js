@@ -1,6 +1,8 @@
 // Interpolates the given points using Fritsch-Carlson Monotone cubic Hermite
 // interpolation. Returns an array of tangent vectors. For details, see
 // http://en.wikipedia.org/wiki/Monotone_cubic_interpolation
+/* global d3_svg_lineSlope: true */
+/* global d3_svg_lineFiniteDifferences: true */
 window.d3_svg_lineMonotoneTangents = function d3_svg_lineMonotoneTangents(points) {
     var tangents = [],
         d,
@@ -44,4 +46,4 @@ window.d3_svg_lineMonotoneTangents = function d3_svg_lineMonotoneTangents(points
         tangents.push([s || 0, m[i] * s || 0]);
     }
     return tangents;
-}
+};

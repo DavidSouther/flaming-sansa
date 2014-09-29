@@ -1,5 +1,6 @@
 // Compute three-point differences for the given points.
 // http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Finite_difference
+/* global d3_svg_lineSlope: true */
 window.d3_svg_lineFiniteDifferences = function d3_svg_lineFiniteDifferences(points) {
     var i = 0,
         j = points.length - 1,
@@ -12,4 +13,4 @@ window.d3_svg_lineFiniteDifferences = function d3_svg_lineFiniteDifferences(poin
     }
     m[i] = d;
     return m;
-}
+};

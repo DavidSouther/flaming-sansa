@@ -14,4 +14,4 @@ window.d3_svg_lineCardinalTangents = function d3_svg_lineCardinalTangents(points
         tangents.push([a * (p2[0] - p0[0]), a * (p2[1] - p0[1])]);
     }
     return tangents;
-}
+};

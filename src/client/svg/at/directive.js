@@ -25,6 +25,6 @@ angular.module('graphing.svg.at', [
                 }
             );
         }
-    }
+    };
 })
 ;

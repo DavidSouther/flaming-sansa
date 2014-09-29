@@ -6,19 +6,19 @@ angular.module('graphing.svg.drawPath', [
     var addDrawPathClass = function addDrawPathClass(length){
         var skip = 2 * length;
         var time = length / 1000;
-        var className = StyleManager.makeClassName("drawPath");
+        var className = StyleManager.makeClassName('drawPath');
 
         var drawPath = {
             selector: '.' + className,
             definition:
-                "stroke-dasharray: " + length + ", " + skip + ";" +
-                "transition: " + time + "s ease-out stroke-dasharray;"
-        }
+                'stroke-dasharray: ' + length + ', ' + skip + ';' +
+                'transition: ' + time + 's ease-out stroke-dasharray;'
+        };
 
         var active = {
-            selector: "." + className + "-add-active",
-            definition: "stroke-dasharray: 0, " + skip + ";"
-        }
+            selector: '.' + className + '-add-active',
+            definition: 'stroke-dasharray: 0, ' + skip + ';'
+        };
 
         StyleManager.addRules([drawPath, active]);
 
@@ -38,7 +38,7 @@ angular.module('graphing.svg.drawPath', [
                 }, function setFrom(value){
                     if(value){
                         if(lastAnimation){
-                            $animation.cancel(lastAnimation);
+                            $animate.cancel(lastAnimation);
                         }
                         element.setAttribute('d', value);
 
@@ -54,12 +54,12 @@ angular.module('graphing.svg.drawPath', [
                                 function(){
                                     // removeDrawPath(className);
                                 }
-                            )
+                            );
                         });
                     }
                 }
             );
         }
-    }
+    };
 })
 ;

@@ -1,7 +1,7 @@
-// Hermite spline construction; generates "C" commands.
+// Hermite spline construction; generates 'C' commands.
 window.d3_svg_lineHermite = function d3_svg_lineHermite(points, tangents) {
-    var quad = points.length != tangents.length,
-        path = "",
+    var quad = points.length !== tangents.length,
+        path = '',
         p0 = points[0],
         p = points[1],
         t0 = tangents[0],
@@ -9,7 +9,7 @@ window.d3_svg_lineHermite = function d3_svg_lineHermite(points, tangents) {
         pi = 1;
 
     if (quad) {
-        path += "Q" + (p[0] - t0[0] * 2 / 3) + "," + (p[1] - t0[1] * 2 / 3) + "," + p[0] + "," + p[1];
+        path += 'Q' + (p[0] - t0[0] * 2 / 3) + ',' + (p[1] - t0[1] * 2 / 3) + ',' + p[0] + ',' + p[1];
         p0 = points[1];
         pi = 2;
     }
@@ -17,17 +17,17 @@ window.d3_svg_lineHermite = function d3_svg_lineHermite(points, tangents) {
         t = tangents[1];
         p = points[pi];
         pi++;
-        path += "C" + (p0[0] + t0[0]) + "," + (p0[1] + t0[1]) + "," + (p[0] - t[0]) + "," + (p[1] - t[1]) + "," + p[0] + "," + p[1];
+        path += 'C' + (p0[0] + t0[0]) + ',' + (p0[1] + t0[1]) + ',' + (p[0] - t[0]) + ',' + (p[1] - t[1]) + ',' + p[0] + ',' + p[1];
         for (var i = 2; i < tangents.length; i++, pi++) {
             p = points[pi];
             t = tangents[i];
-            path += "S" + (p[0] - t[0]) + "," + (p[1] - t[1]) + "," + p[0] + "," + p[1];
+            path += 'S' + (p[0] - t[0]) + ',' + (p[1] - t[1]) + ',' + p[0] + ',' + p[1];
         }
     }
     if (quad) {
         var lp = points[pi];
-        path += "Q" + (p[0] + t[0] * 2 / 3) + "," + (p[1] + t[1] * 2 / 3) + "," + lp[0] + "," + lp[1];
+        path += 'Q' + (p[0] + t[0] * 2 / 3) + ',' + (p[1] + t[1] * 2 / 3) + ',' + lp[0] + ',' + lp[1];
     }
 
     return path;
-}
+};

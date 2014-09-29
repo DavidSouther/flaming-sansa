@@ -23,6 +23,6 @@ angular.module('graphing.svg.radius', [
                 }
             );
         }
-    }
+    };
 })
 ;

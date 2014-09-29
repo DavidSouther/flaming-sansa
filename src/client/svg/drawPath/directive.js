@@ -1,32 +1,29 @@
 angular.module('graphing.svg.drawPath', [
-    'ngAnimate'
+    'ngAnimate',
+    'graphing.animation.style'
 ])
-.directive('drawPath', function($animate, $parse, $document){
-    var pathStyles = $document[0].createElement('style');
-    pathStyles.type = 'text/css';
-    pathStyles.id = "graphing_drawPath_styles"
-    $document.find('head').append(pathStyles);
+.directive('drawPath', function($animate, $parse, $timeout, StyleManager){
+    var addDrawPathClass = function addDrawPathClass(length){
+        var skip = 2 * length;
+        var time = length / 1000;
+        var className = StyleManager.makeClassName("drawPath");
 
-    var uid = 0;
-    function nextUid(){
-        return ++uid;
-    }
+        var drawPath = {
+            selector: '.' + className,
+            definition:
+                "stroke-dasharray: " + length + ", " + skip + ";" +
+                "transition: " + time + "s ease-out stroke-dasharray;"
+        }
 
-    function addDrawPathClass(length){
-        var className = "drawPath_" + nextUid();
-        var classDef = [
-            "stroke-dasharray: " + length + ", " + length + ";",
-            "stroke-dashoffset: " + length + ";",
-            "transition: " + (length / 1000) + "s ease stroke-dashoffset;"
-        ].join('\n');
-        var classActiveDef = "stroke-dashoffset: " + '0' + ";";
+        var active = {
+            selector: "." + className + "-add-active",
+            definition: "stroke-dasharray: 0, " + skip + ";"
+        }
 
-        var rule = "." + className + "{\n" + classDef + "\n}\n";
-        var ruleActive = "." + className + "-active {\n" + classActiveDef + "\n}\n";
-        pathStyles.innerText += rule + ruleActive;
+        StyleManager.addRules([drawPath, active]);
 
         return className;
-    }
+    };
 
     return {
         restrict: 'A',
@@ -50,7 +47,15 @@ angular.module('graphing.svg.drawPath', [
 
                         var className = addDrawPathClass(length);
 
-                        lastAnimation = $animate.addClass($element, className);
+                        $timeout(function(){
+                            lastAnimation = $animate.addClass(
+                                $element,
+                                className,
+                                function(){
+                                    // removeDrawPath(className);
+                                }
+                            )
+                        });
                     }
                 }
             );

@@ -8,8 +8,7 @@ ion-view(title="Trig Demo")
                 x = { min: -1.2, max: 5 };\
                 y = {};\
                 y.max = (260 * (x.max - x.min)) * (1 / (2 * 760));\
-                y.min = -y.max;\
-                \
+                y.min = -y.max; \
                 time = 0;\
                 delta = .015 / 2;\
                 value = {x: Math.PI, y: 0};\
@@ -70,6 +69,9 @@ ion-view(title="Trig Demo")
                         from="[value.x, y.scaled.zero]"
                         to="[value.x, value.y]"
                     )
+                    path.cosine(
+                        ng-attr-d="{{ data | path:cosine:$scales.x:$scales.y }}"
+                    )
                     line.cosine(
                         from="[ x.scaled.zero, value.y ]"
                         to="[ value.x, value.y ]"
@@ -85,6 +87,9 @@ ion-view(title="Trig Demo")
                         ]\
                         "
                     )
+                    //- path.tangent(
+                    //-     ng-attr-d="{{ data | path:tangent:$scales.x:$scales.y }}"
+                    //- )
                     line.tangent(
                         from="[ \
                             $scales.x(Math.sign(Math.cos(time))), \

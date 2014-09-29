@@ -21,3 +21,11 @@ angular.module('graphing.demos.trig', [
     $scope.sine =
         x: (d, i)-> d
         y: (d, i)-> Math.sin(d - $scope.time)
+
+    $scope.cosine =
+        x: (d, i)-> d
+        y: (d, i)-> Math.cos(d - $scope.time)
+
+    $scope.tangent =
+        x: (d, i)-> d
+        y: (d, i)-> Math.tan(d - $scope.time)

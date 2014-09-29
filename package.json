@@ -22,6 +22,7 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-karma": "^0.9.0",
     "grunt-recurse": "^0.2.1",
+    "grunt-release-branch": "^0.2.0",
     "karma": "^0.12.23",
     "karma-chrome-launcher": "^0.1.4",
     "karma-coffee-preprocessor": "^0.2.1",

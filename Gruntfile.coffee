@@ -15,6 +15,7 @@ module.exports = (grunt)->
     # grunt-recurse magic.
     [
         ['.', 'src', 'client']
+        ['.', 'src', 'deploy']
     ]
     .map((dir)->Path.join.apply null, dir)
     .map(grunt.grunt)

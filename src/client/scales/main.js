@@ -62,11 +62,26 @@ angular.module('graphing.scales', [
         compile: function(){
             return {
                 pre: function($scope, $element, attrs){
+                    var e = $element[0];
                     var $exp = $parse(attrs.graphScales);
                     var setScales = (function setScales(){
+                        var margins = $scope.$chartOptions.margin || {
+                            top: 10,
+                            right: 10,
+                            bottom: 30,
+                            left: 30
+                        };
+
+                        margins.leftRight = margins.left + margins.right;
+                        margins.topBottom = margins.top + margins.bottom;
+
                         // Get the bounds of the parent element
-                        var height = $element[0].offsetHeight;
-                        var width = $element[0].offsetWidth;
+                        var height = (
+                            e.offsetHeight || e.clientHeight
+                        ) - margins.leftRight;
+                        var width = (
+                            e.offsetWidth || e.clientWidth
+                        ) - margins.topBottom;
 
                         // Reset the scales
                         $scope.$scales = {};
@@ -83,6 +98,10 @@ angular.module('graphing.scales', [
                                     x: width,
                                     y: height
                                 }[name] || scale[2] || ((width + height) / 2);
+                                minima = {
+                                    x: margins.left,
+                                    y: margins.top
+                                }[name];
                             } else {
                                 minima = scale[2];
                                 maxima = scale[3];

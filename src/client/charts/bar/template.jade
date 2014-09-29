@@ -2,8 +2,8 @@ svg.chart.chart-bar(
     width='100%'
     height='100%'
     graph-scales="{\
-        x: ['linear', $chartData.$x.$min, $chartData.$x.$max],\
-        y: ['linear', $chartData.$y.$max, $chartData.$y.$min],\
+        x: ['linear', $chartOptions.range.x.min, $chartOptions.range.x.max],\
+        y: ['linear', $chartOptions.range.y.max, $chartOptions.range.y.min],\
     }"
     shape-rendering="geometricPrecision"
 )

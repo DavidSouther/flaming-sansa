@@ -26,7 +26,7 @@ module.exports = (grunt)->
                 jshintrc: '.jshintrc'
             files: [
                 'src/**/*.js'
-                '!src/client/assets/**'
+                '!src/client/d3/**'
             ]
 
         coffeelint:

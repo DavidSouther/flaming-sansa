@@ -14,11 +14,9 @@ svg.chart.chart-bar(
         )
         g.point(
             ng-repeat="point in chartData"
-            style="\
-                transform: translate(\
-                    {{ $scales.x($chartOptions.x(point)) }}px, \
-                    {{ $scales.y($chartOptions.y(point)) }}px \
-                )\
-            }"
+            scatter-point="[\
+                $scales.x($chartOptions.x(point)),\
+                $scales.y($chartOptions.y(point)) \
+            ]"
         )
             circle( cx=0, cy=0, r=4 )

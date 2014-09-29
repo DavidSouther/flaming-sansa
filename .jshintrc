@@ -1,0 +1,20 @@
+{
+  "browser": true,
+  "node": false,
+  "camelcase": false,
+  "eqeqeq": true,
+  "indent": 4,
+  "quotmark": "single",
+  "newcap": true,
+  "trailing": true,
+  "undef": true,
+  "unused": true,
+  "latedef": true,
+  "globals": {
+    "angular": true,
+    "__dirname": true,
+    "module": true,
+    "require": true,
+    "EPSILON": true
+  }
+}

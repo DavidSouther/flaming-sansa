@@ -4,12 +4,35 @@
   "description": "Angular SVG Primitives and Graphs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node ./node_modules/.bin/grunt",
     "start": "node app.js"
   },
-  "author": "",
+  "author": "David Souther <davidsouther@gmail.com>",
+  "repository": "git://github.com/DavidSouther/flaming-sansa.git",
   "license": "ISC",
   "dependencies": {
     "ng-stassets": "^0.0.14"
+  },
+  "devDependencies": {
+    "coffeelint": "^1.6.0",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-coffeelint": "0.0.13",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-karma": "^0.9.0",
+    "grunt-recurse": "^0.2.1",
+    "karma": "^0.12.23",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-coffee-preprocessor": "^0.2.1",
+    "karma-coverage": "^0.2.6",
+    "karma-junit-reporter": "^0.2.2",
+    "karma-mocha": "^0.1.9",
+    "karma-sinon-chai": "^0.2.0",
+    "karma-spec-reporter": "0.0.13",
+    "load-grunt-tasks": "^0.2.1",
+    "mocha": "^1.21.4",
+    "q": "^1.0.1",
+    "superagent": "^0.19.0"
   }
 }

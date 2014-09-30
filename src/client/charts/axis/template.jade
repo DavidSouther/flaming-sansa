@@ -1,0 +1,10 @@
+svg
+    g.axis
+        path(
+            draw-path="'M'+$scales.x($chartOptions.range.x.min)+',0L' + $scales.x($chartOptions.range.x.max) + ',0'"
+            style="stroke: #b2b2b2; stroke-width: 2px; transform: translateY({{$scales.y($chartOptions.range.y.min)}}px)"
+        )
+        path(
+            draw-path="'M0,' + $scales.y($chartOptions.range.y.min) + 'L0,' + $scales.y($chartOptions.range.y.max)"
+            style="stroke: #b2b2b2; stroke-width: 2px; transform: translateX({{$scales.x($chartOptions.range.x.min)}}px)"
+        )

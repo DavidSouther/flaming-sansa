@@ -9,6 +9,7 @@ angular.module('graphing.demos.bar', [
         views:
             'demo-bar':
                 template: '<bar-demo />'
+
 .directive 'barDemo', ->
     restrict: 'E'
     templateUrl: 'demos/bar'

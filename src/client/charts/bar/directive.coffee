@@ -1,5 +1,6 @@
 angular.module('graphing.charts.bar', [
     'graphing.scales'
+    'graphing.charts.axis'
     'charts.bar.template'
 ])
 .directive 'barChart', ($animate)->

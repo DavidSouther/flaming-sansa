@@ -47,15 +47,15 @@ angular.module('graphing.svg.drawPath', [
 
                         var className = addDrawPathClass(length);
 
-                        $timeout(function(){
-                            lastAnimation = $animate.addClass(
-                                $element,
-                                className,
-                                function(){
-                                    // removeDrawPath(className);
-                                }
-                            );
-                        });
+                        // $timeout(function(){
+                        lastAnimation = $animate.addClass(
+                            $element,
+                            className,
+                            function(){
+                                // removeDrawPath(className);
+                            }
+                        );
+                        // });
                     }
                 }
             );

@@ -1,0 +1,105 @@
+
+g.axis line,
+g.axis path {
+  stroke: #b2b2b2;
+  stroke-width: 2px;
+}
+g.axis text {
+  fill: #b2b2b2;
+  font-family: sans-serif;
+  font-size: 22;
+}
+g.axis .tick.ng-enter {
+  -webkit-transition: 2s ease-in-out opacity;
+  -moz-transition: 2s ease-in-out opacity;
+  -o-transition: 2s ease-in-out opacity;
+  -ms-transition: 2s ease-in-out opacity;
+  transition: 2s ease-in-out opacity;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+g.axis .tick.ng-enter-active {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+
+.scatter .point {
+  -webkit-transition: 1s linear opacity;
+  -moz-transition: 1s linear opacity;
+  -o-transition: 1s linear opacity;
+  -ms-transition: 1s linear opacity;
+  transition: 1s linear opacity;
+}
+.scatter .point.ng-enter {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.scatter .point.ng-enter-active {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.scatter path,
+.scatter circle {
+  stroke: #145fd7;
+  stroke-width: 2px;
+  fill: none;
+}
+.scatter circle {
+  fill: #fff;
+}
+
+
+#trig-demo {
+  margin: 0 auto;
+svg
+}
+.trig path,
+.trig line,
+.trig circle {
+  stroke: #4682b4;
+  stroke-width: 2px;
+  fill: none;
+}
+.trig text {
+  fill: #444;
+  font-family: sans-serif;
+  font-size: 22;
+}
+.trig .axis {
+  stroke: #999;
+}
+.trig .dot {
+  fill: #fff;
+}
+.trig .sine {
+  stroke: #00f;
+}
+.trig .cosine {
+  stroke: #008000;
+}
+.trig .hypotenuse {
+  stroke: #f00;
+}
+.trig .tangent {
+  stroke: #800080;
+}
+.trig .exsecant {
+  stroke: #ff0;
+}
+
+.drawPath {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: -2000;
+  -webkit-transition: 2s ease stroke-dashoffset;
+  -moz-transition: 2s ease stroke-dashoffset;
+  -o-transition: 2s ease stroke-dashoffset;
+  -ms-transition: 2s ease stroke-dashoffset;
+  transition: 2s ease stroke-dashoffset;
+}
+.drawPath .drawPath-active {
+  stroke-dashoffset: 0;
+}

@@ -1,3 +1,16 @@
 g.axis
-    line
+    line, path
         stroke #b2b2b2
+        stroke-width 2px
+
+    text
+        fill #b2b2b2
+        font-family sans-serif
+        font-size 22
+
+    .tick.ng-enter
+        transition 2s ease-in-out opacity
+        opacity 0
+
+    .tick.ng-enter-active
+        opacity 1

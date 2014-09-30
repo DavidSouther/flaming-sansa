@@ -43,5 +43,5 @@ angular.module('graphing.charts.bar', [
         $scope.$chartOptions.margins or= {}
         $scope.$chartOptions.margins.top or= 10
         $scope.$chartOptions.margins.bottom or= 30
-        $scope.$chartOptions.margins.left or= 30
+        $scope.$chartOptions.margins.left or= 50
         $scope.$chartOptions.margins.right or= 10

@@ -65,7 +65,7 @@ angular.module('graphing.scales', [
                     var e = $element[0];
                     var $exp = $parse(attrs.graphScales);
                     var setScales = (function setScales(){
-                        var margins = ($scope.$chartOptions || {}).margin || {
+                        var margins = ($scope.$chartOptions || {}).margins || {
                             top: 10,
                             right: 10,
                             bottom: 30,

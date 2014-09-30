@@ -1,10 +1,25 @@
 svg
-    g.axis
+    g.axis.x(
+        style="transform: translateY({{$scales.y($chartOptions.range.y.min)}}px)"
+    )
         path(
             draw-path="'M'+$scales.x($chartOptions.range.x.min)+',0L' + $scales.x($chartOptions.range.x.max) + ',0'"
-            style="stroke: #b2b2b2; stroke-width: 2px; transform: translateY({{$scales.y($chartOptions.range.y.min)}}px)"
         )
+        g.tick(
+            ng-repeat="tick in $ticks.x"
+            style="transform: translateX({{$scales.x(tick)}}px)"
+        )
+            path(d="M0,0L0,5")
+            text( at="[ -20, 20]" ) {{ tick | number:2 }}
+    g.axis.y(
+        style="transform: translateX({{$scales.x($chartOptions.range.x.min)}}px)"
+    )
         path(
             draw-path="'M0,' + $scales.y($chartOptions.range.y.min) + 'L0,' + $scales.y($chartOptions.range.y.max)"
-            style="stroke: #b2b2b2; stroke-width: 2px; transform: translateX({{$scales.x($chartOptions.range.x.min)}}px)"
         )
+        g.tick(
+            ng-repeat="tick in $ticks.y"
+            style="transform: translateY({{$scales.y(tick)}}px)"
+        )
+            path( d="M0,0L-5,0" )
+            text( at="[ -35, 5 ]" ) {{ tick | number:2 }}

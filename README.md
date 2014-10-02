@@ -13,9 +13,14 @@ node app.js
 The node app will print a banner. Visit that. Click around. Demos are listed
 along the bottom tab bar.
 
-### Demos
+### Adding a Demo
 
-In `src/client/demos`. Add a folder. Add `directive` to the folder. The
-directive should declare a module, `graphing.demo.#{DEMONAME}`. In the demo
-module, add a config block depending on `$stateProvider`. Define a new state
-that is a child of `demo`.  
+See current demos for sample code.
+
+**Checklist:**
+
+* [ ] Add a new module, `graphing.demos.name`.
+* [ ] Add that module as a dependency to `graphing.demos`.
+* [ ] Create a directive, template, and style sheets.
+* [ ] Attach the directive as a child state of `demo`.
+* [ ] Add a tab in `demos/template.jade`.

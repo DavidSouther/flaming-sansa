@@ -1,11 +1,11 @@
 angular.module('graphing.animation.style', [
 
 ])
-###
-    A service to dynamically create and manage styles, especially for
-    js-controlled animations.
-###
 .service 'StyleManager', ($document)->
+    ###
+        A service to dynamically create and manage styles, especially for
+        js-controlled animations.
+    ###
     # Prepare a style sheet to scratch on
     pathStyles = $document[0].createElement("style")
     pathStyles.type = "text/css"

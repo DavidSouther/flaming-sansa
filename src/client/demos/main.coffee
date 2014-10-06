@@ -2,7 +2,7 @@ angular.module('graphing.demos', [
     'ionic'
 
     'graphing.demos.trig'
-    'graphing.demos.bar'
+    'graphing.demos.line'
 
     'demos.template'
 ])

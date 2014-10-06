@@ -1,11 +1,11 @@
-angular.module('graphing.charts.bar', [
+angular.module('graphing.charts.line', [
     'graphing.scales'
     'graphing.charts.axis'
-    'charts.bar.template'
+    'charts.line.template'
 ])
-.directive 'barChart', ($animate)->
+.directive 'lineChart', ($animate)->
     restrict: 'AE'
-    templateUrl: 'charts/bar'
+    templateUrl: 'charts/line'
     scope:
         chartData: '='
         chartOptions: '='

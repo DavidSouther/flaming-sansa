@@ -21,3 +21,21 @@ svg.chart.chart-bar.scatter(
             ]"
             r=4
         )
+        g.bars(
+            ng-init=""
+        )
+            rect.bar(
+                ng-repeat="point in chartData"
+                at="[ \
+                    $scales.x($chartOptions.x(point)) - 4, \
+                    $scales.y($chartOptions.y(point)) \
+                ]"
+                width="8"
+                ng-attr-height="{{ \
+                    $scales.y($chartOptions.range.y.min) - \
+                    $scales.y($chartOptions.y(point)) \
+                }}"
+                fill="red"
+                stroke="black"
+                stroke-width="1"
+            )

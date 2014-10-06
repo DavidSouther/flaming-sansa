@@ -4,19 +4,6 @@ ion-view(title="Trig Demo")
         svg(
             width='760px'
             height='260px'
-            ng-init="\
-                x = { min: -1.2, max: 5 };\
-                y = {};\
-                y.max = (260 * (x.max - x.min)) * (1 / (2 * 760));\
-                y.min = -y.max; \
-                time = 0;\
-                delta = .015 / 2;\
-                value = {x: Math.PI, y: 0};\
-            "
-            graph-scales="{\
-                x: ['linear', x.min, x.max],\
-                y: ['linear', y.min, y.max],\
-            }"
         )
             g.vis.trig(
                 ng-controller="TrigCtrl"

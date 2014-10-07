@@ -14,6 +14,7 @@ angular.module('graphing.charts.base', [
                 $scope.chartOptions.y
 
             range: $scope.chartOptions.range or {}
+            axis: $scope.chartOptions.axis or {}
 
         $scope.$chartData =
             $x: $scope.chartData.map (_, i)-> $scope.$chartOptions.x(_, i)

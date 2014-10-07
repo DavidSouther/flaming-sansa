@@ -10,7 +10,7 @@ svg
             style="transform: translateX({{$scales.x(tick)}}px)"
         )
             path(d="M0,0L0,5")
-            text( at="[ -20, 20]" ) {{ tick | number:2 }}
+            text( at="[ -20, 20]" ) {{ tick | chooseFilter:$format.x.type:$format.x.args }}
     g.axis.y(
         style="transform: translateX({{$scales.x($chartOptions.range.x.min)}}px)"
     )
@@ -22,4 +22,4 @@ svg
             style="transform: translateY({{$scales.y(tick)}}px)"
         )
             path( d="M0,0L-5,0" )
-            text( at="[ -35, 5 ]" ) {{ tick | number:2 }}
+            text( at="[ -35, 5 ]" ) {{ tick | chooseFilter:$format.y.type:$format.y.args }}

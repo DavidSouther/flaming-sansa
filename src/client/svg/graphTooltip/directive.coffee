@@ -2,6 +2,7 @@ angular.module('graphing.svg.tooltip', [
     'svg.graphTooltip.template'
 ])
 .directive 'graphTooltip', ($templateCache, $compile)->
+    tooltipOffset = 0
     tooltip = null
     tooltipData =
         show: no
@@ -32,10 +33,11 @@ angular.module('graphing.svg.tooltip', [
                 tooltipExp = $compile(tooltipTemplate)
                 tooltip = tooltipExp($scope)
                 lastSvg.append tooltip
+                tooltipOffset = lastSvg[0].offsetLeft
         post: ($scope, iElement, iAttrs)->
-            iElement.bind 'mouseover', ->
+            iElement.bind 'mouseover', (event)->
                 $scope.$apply ->
-                    showTooltipAt $scope, [50, 50]
+                    showTooltipAt $scope, [event.x - tooltipOffset, 50]
             iElement.bind 'mouseout', ->
                 $scope.$apply ->
                     hideTooltip $scope

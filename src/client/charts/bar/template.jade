@@ -3,8 +3,8 @@ svg.chart.chart-bar(
     width='100%'
     height='100%'
     graph-scales="{\
-        x: ['linear', $chartOptions.range.x.min, $chartOptions.range.x.max],\
-        y: ['linear', $chartOptions.range.y.max, $chartOptions.range.y.min],\
+        x: [$chartOptions.scale.x, $chartOptions.range.x.min, $chartOptions.range.x.max],\
+        y: [$chartOptions.scale.x, $chartOptions.range.y.max, $chartOptions.range.y.min],\
     }"
     shape-rendering="geometricPrecision"
 )
@@ -17,10 +17,10 @@ svg.chart.chart-bar(
             rect.bar(
                 ng-repeat="point in chartData"
                 at="[ \
-                    $scales.x($chartOptions.x(point)) - 4, \
+                    $scales.x($chartOptions.x(point)) - (barWidth / 2), \
                     $scales.y($chartOptions.y(point)) \
                 ]"
-                width="8"
+                ng-attr-width="{{ barWidth - 2 }}"
                 ng-attr-height="{{ \
                     $scales.y($chartOptions.range.y.min) - \
                     $scales.y($chartOptions.y(point)) \

@@ -25,6 +25,10 @@ angular.module('graphing.charts.base', [
         $scope.$chartData.$y.$min = Math.min.apply Math, $scope.$chartData.$y
         $scope.$chartData.$y.$max = Math.max.apply Math, $scope.$chartData.$y
 
+        $scope.$chartOptions.scale = $scope.chartOptions.scale or {}
+        $scope.$chartOptions.scale.x or= 'linear'
+        $scope.$chartOptions.scale.y or= 'linear'
+
         $scope.$chartOptions.range =
             x: $scope.$chartOptions.range.x or {}
             y: $scope.$chartOptions.range.y or {}

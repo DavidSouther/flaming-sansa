@@ -11,3 +11,7 @@ angular.module('graphing.charts.bar', [
         chartOptions: '='
     templateUrl: 'charts/bar'
     require: 'baseChart'
+    controller: ($scope, $timeout)->
+        $scope.barWidth = Math.max(4,
+            Math.min(760 / $scope.chartData.length)
+        )

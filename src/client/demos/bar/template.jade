@@ -7,7 +7,7 @@ ion-view(title="Bar Demo")
             chart-options="{\
                 x: 'timestamp', \
                 y: 'rtt', \
-                range: {y: {max: 1000}}, \
+                range: {y: {min: 0, max: 1000}}, \
                 scale: {x: 'log'}, \
                 axis: {\
                     tickCount: 8,\

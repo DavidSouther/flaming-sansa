@@ -1,4 +1,5 @@
 angular.module('graphing.charts.base', [
+    'graphing.svg.tooltip'
 ])
 .directive 'baseChart', ->
     priority: 10000

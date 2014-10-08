@@ -2,7 +2,7 @@
 g.axis line,
 g.axis path {
   stroke: #b2b2b2;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
 g.axis text {
   fill: #b2b2b2;
@@ -23,6 +23,10 @@ g.axis .tick.ng-enter-active {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+
+bar-chart {
+  display: block;
 }
 
 .scatter .point {

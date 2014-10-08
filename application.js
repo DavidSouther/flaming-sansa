@@ -4,7 +4,7 @@ window.EPSILON = 1e-6;
 }).call(this);
 
 (function() {
-  angular.module('graphing.demos', ['ionic', 'graphing.demos.trig', 'graphing.demos.bar', 'demos.template']).config(function($stateProvider, $urlRouterProvider) {
+  angular.module('graphing.demos', ['ionic', 'graphing.demos.trig', 'graphing.demos.line', 'graphing.demos.bar', 'demos.template']).config(function($stateProvider, $urlRouterProvider) {
     $stateProvider.state('demo', {
       abstract: true,
       url: '/demo',
@@ -18,7 +18,7 @@ window.EPSILON = 1e-6;
       }
     });
     return $urlRouterProvider.otherwise("/demo/trig");
-  }).value('SalesData', [1.46220, 1.47004, 1.49253, 1.49118, 1.49722, 1.50138, 1.50008, 1.51493, 1.50781, 1.50899, 1.53037, 1.58137, 1.54299, 1.53307, 1.55845, 1.56213, 1.54488, 1.56927, 1.55305, 1.55710, 1.56235, 1.58847, 1.59309, 1.58303, 1.59470]);
+  });
 
 }).call(this);
 
@@ -72,6 +72,60 @@ angular.module('graphing.scales', [
     $rootScope.TWO_PI = 2 * Math.PI;
     $rootScope.Math = Math;
 })
+.service('ScaleSvc', function(){
+    var getScales = function getScales(scales, $element, options){
+        var e = $element[0];
+        var margins = (options || {}).margins || {
+            top: 10,
+            right: 10,
+            bottom: 30,
+            left: 30
+        };
+
+        margins.leftRight = margins.left + margins.right;
+        margins.topBottom = margins.top + margins.bottom;
+
+        // Get the bounds of the parent element
+        var height = (
+            e.offsetHeight || e.clientHeight
+        ) - margins.leftRight;
+        var width = (
+            e.offsetWidth || e.clientWidth
+        ) - margins.topBottom;
+
+        // Reset the scales
+        var $scales = {};
+
+        // Evaluate the expression to get the scale params
+
+        for (var name in scales) { // Iterate the object
+            var scale = scales[name];
+            // The scale object is an array
+            var type = scale.shift();
+            var maxima = 0, minima = 0;
+            if (name === 'x' || name === 'y'){
+                maxima = {
+                    x: width,
+                    y: height
+                }[name] || scale[2] || ((width + height) / 2);
+                minima = {
+                    x: margins.left,
+                    y: margins.top
+                }[name];
+            } else {
+                minima = scale[2];
+                maxima = scale[3];
+            }
+            $scales[name] = Scales[type](
+                scale[0], scale[1], minima, maxima
+            );
+        }
+
+        return $scales;
+    };
+
+    return {getScales: getScales};
+})
 .filter('scale', function(){
     return function Scale(value, scale){
         if(angular.isFunction(scale)){
@@ -81,60 +135,19 @@ angular.module('graphing.scales', [
         }
     };
 })
-.directive('graphScales', function($parse){
+.directive('graphScales', function($parse, ScaleSvc){
     return {
         priority: 400,
         compile: function(){
             return {
                 pre: function($scope, $element, attrs){
-                    var e = $element[0];
                     var $exp = $parse(attrs.graphScales);
                     var setScales = (function setScales(){
-                        var margins = ($scope.$chartOptions || {}).margins || {
-                            top: 10,
-                            right: 10,
-                            bottom: 30,
-                            left: 30
-                        };
-
-                        margins.leftRight = margins.left + margins.right;
-                        margins.topBottom = margins.top + margins.bottom;
-
-                        // Get the bounds of the parent element
-                        var height = (
-                            e.offsetHeight || e.clientHeight
-                        ) - margins.leftRight;
-                        var width = (
-                            e.offsetWidth || e.clientWidth
-                        ) - margins.topBottom;
-
-                        // Reset the scales
-                        $scope.$scales = {};
-
-                        // Evaluate the expression to get the scale params
-                        var scales = $exp($scope);
-                        for (var name in scales) { // Iterate the object
-                            var scale = scales[name];
-                            // The scale object is an array
-                            var type = scale.shift();
-                            var maxima = 0, minima = 0;
-                            if (name === 'x' || name === 'y'){
-                                maxima = {
-                                    x: width,
-                                    y: height
-                                }[name] || scale[2] || ((width + height) / 2);
-                                minima = {
-                                    x: margins.left,
-                                    y: margins.top
-                                }[name];
-                            } else {
-                                minima = scale[2];
-                                maxima = scale[3];
-                            }
-                            $scope.$scales[name] = Scales[type](
-                                scale[0], scale[1], minima, maxima
-                            );
-                        }
+                        $scope.$scales = ScaleSvc.getScales(
+                            $exp($scope),
+                            $element,
+                            $scope.$chartOptions
+                        );
                         return arguments.callee;
                     }());
                     $scope.$on('Window Resized', setScales);
@@ -207,6 +220,11 @@ angular.module('graphing.svg', [
 
 (function() {
   angular.module('graphing.animation.style', []).service('StyleManager', function($document) {
+
+    /*
+        A service to dynamically create and manage styles, especially for
+        js-controlled animations.
+     */
     var addRules, makeClassName, makeRule, nextUid, pathStyles, uid;
     pathStyles = $document[0].createElement("style");
     pathStyles.type = "text/css";
@@ -264,28 +282,67 @@ angular.module('graphing.svg', [
 }).call(this);
 
 (function() {
-  angular.module('graphing.charts.axis', ['charts.axis.template']).directive('axis', function() {
+  var AxisCtrl;
+
+  AxisCtrl = (function() {
+    function AxisCtrl() {
+      AxisCtrl.prototype.calcTicks.apply(this);
+      AxisCtrl.prototype.formats.apply(this);
+    }
+
+    AxisCtrl.prototype.calcTicks = function() {
+      var i, range, tickCount, xStep, yStep;
+      this.$ticks = {
+        x: [],
+        y: []
+      };
+      range = this.$chartOptions.range;
+      tickCount = this.$chartOptions.axis.tickCount || 10;
+      xStep = (range.x.max - range.x.min) / tickCount;
+      yStep = (range.y.max - range.y.min) / tickCount;
+      i = 10;
+      while (i >= 0) {
+        this.$ticks.x.push((xStep * i) + range.x.min);
+        this.$ticks.y.push((yStep * i) + range.y.min);
+        i--;
+      }
+      return this;
+    };
+
+    AxisCtrl.prototype.formats = function() {
+      var _base, _base1, _ref;
+      this.$format = ((_ref = this.$chartOptions.axis) != null ? _ref.format : void 0) || {};
+      (_base = this.$format).x || (_base.x = ['number', 2]);
+      (_base1 = this.$format).y || (_base1.y = ['number', 2]);
+      this.$format.x = {
+        type: this.$format.x[0],
+        args: this.$format.x.slice(1)
+      };
+      this.$format.y = {
+        type: this.$format.y[0],
+        args: this.$format.y.slice(1)
+      };
+      return this;
+    };
+
+    return AxisCtrl;
+
+  })();
+
+  angular.module('graphing.charts.axis', ['charts.axis.template']).filter('chooseFilter', function($filter) {
+    return function(value, filter, args) {
+      if (args == null) {
+        args = [];
+      }
+      return $filter(filter).apply(null, [value].concat(args));
+    };
+  }).controller('AxisCtrl', AxisCtrl).directive('axis', function() {
     return {
       restrict: 'EA',
       replace: true,
       templateUrl: 'charts/axis',
       controller: function($scope) {
-        var i, range, xStep, yStep, _results;
-        $scope.$ticks = {
-          x: [],
-          y: []
-        };
-        range = $scope.$chartOptions.range;
-        xStep = (range.x.max - range.x.min) / 10;
-        yStep = (range.y.max - range.y.min) / 10;
-        i = 10;
-        _results = [];
-        while (i >= 0) {
-          $scope.$ticks.x.push((xStep * i) + range.x.min);
-          $scope.$ticks.y.push((yStep * i) + range.y.min);
-          _results.push(i--);
-        }
-        return _results;
+        return AxisCtrl.apply($scope);
       }
     };
   });
@@ -293,16 +350,29 @@ angular.module('graphing.svg', [
 }).call(this);
 
 (function() {
-  angular.module('graphing.charts.bar', ['graphing.scales', 'graphing.charts.axis', 'charts.bar.template']).directive('barChart', function($animate) {
+  angular.module('graphing.charts.bar', ['graphing.scales', 'graphing.charts.base', 'graphing.charts.axis', 'charts.bar.template']).directive('barChart', function($animate) {
     return {
       restrict: 'AE',
-      templateUrl: 'charts/bar',
       scope: {
         chartData: '=',
         chartOptions: '='
       },
+      templateUrl: 'charts/bar',
+      require: 'baseChart',
+      controller: function($scope, $timeout) {
+        return $scope.barWidth = Math.max(4, Math.min(760 / $scope.chartData.length));
+      }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('graphing.charts.base', ['graphing.svg.tooltip']).directive('baseChart', function() {
+    return {
+      priority: 10000,
       controller: function($scope) {
-        var _base, _base1, _base2, _base3, _base4, _base5, _base6, _base7, _base8;
+        var _base, _base1, _base10, _base2, _base3, _base4, _base5, _base6, _base7, _base8, _base9;
         $scope.$chartOptions = {
           x: angular.isString($scope.chartOptions.x) ? function(_) {
             return _[$scope.chartOptions.x];
@@ -310,7 +380,8 @@ angular.module('graphing.svg', [
           y: angular.isString($scope.chartOptions.y) ? function(_) {
             return _[$scope.chartOptions.y];
           } : angular.isFunction($scope.chartOptions.y) ? $scope.chartOptions.y : void 0,
-          range: $scope.chartOptions.range || {}
+          range: $scope.chartOptions.range || {},
+          axis: $scope.chartOptions.axis || {}
         };
         $scope.$chartData = {
           $x: $scope.chartData.map(function(_, i) {
@@ -324,20 +395,38 @@ angular.module('graphing.svg', [
         $scope.$chartData.$x.$max = Math.max.apply(Math, $scope.$chartData.$x);
         $scope.$chartData.$y.$min = Math.min.apply(Math, $scope.$chartData.$y);
         $scope.$chartData.$y.$max = Math.max.apply(Math, $scope.$chartData.$y);
+        $scope.$chartOptions.scale = $scope.chartOptions.scale || {};
+        (_base = $scope.$chartOptions.scale).x || (_base.x = 'linear');
+        (_base1 = $scope.$chartOptions.scale).y || (_base1.y = 'linear');
         $scope.$chartOptions.range = {
           x: $scope.$chartOptions.range.x || {},
           y: $scope.$chartOptions.range.y || {}
         };
-        (_base = $scope.$chartOptions.range.x).min || (_base.min = $scope.$chartData.$x.$min);
-        (_base1 = $scope.$chartOptions.range.x).max || (_base1.max = $scope.$chartData.$x.$max);
-        (_base2 = $scope.$chartOptions.range.y).min || (_base2.min = $scope.$chartData.$y.$min);
-        (_base3 = $scope.$chartOptions.range.y).max || (_base3.max = $scope.$chartData.$y.$max);
-        (_base4 = $scope.$chartOptions).margins || (_base4.margins = {});
-        (_base5 = $scope.$chartOptions.margins).top || (_base5.top = 10);
-        (_base6 = $scope.$chartOptions.margins).bottom || (_base6.bottom = 30);
-        (_base7 = $scope.$chartOptions.margins).left || (_base7.left = 50);
-        return (_base8 = $scope.$chartOptions.margins).right || (_base8.right = 10);
+        (_base2 = $scope.$chartOptions.range.x).min || (_base2.min = $scope.$chartData.$x.$min);
+        (_base3 = $scope.$chartOptions.range.x).max || (_base3.max = $scope.$chartData.$x.$max);
+        (_base4 = $scope.$chartOptions.range.y).min || (_base4.min = $scope.$chartData.$y.$min);
+        (_base5 = $scope.$chartOptions.range.y).max || (_base5.max = $scope.$chartData.$y.$max);
+        (_base6 = $scope.$chartOptions).margins || (_base6.margins = {});
+        (_base7 = $scope.$chartOptions.margins).top || (_base7.top = 10);
+        (_base8 = $scope.$chartOptions.margins).bottom || (_base8.bottom = 30);
+        (_base9 = $scope.$chartOptions.margins).left || (_base9.left = 50);
+        return (_base10 = $scope.$chartOptions.margins).right || (_base10.right = 10);
       }
+    };
+  });
+
+}).call(this);
+
+(function() {
+  angular.module('graphing.charts.line', ['graphing.scales', 'graphing.charts.base', 'graphing.charts.axis', 'charts.line.template']).directive('lineChart', function($animate) {
+    return {
+      restrict: 'AE',
+      scope: {
+        chartData: '=',
+        chartOptions: '='
+      },
+      require: 'baseChart',
+      templateUrl: 'charts/line'
     };
   });
 
@@ -357,6 +446,405 @@ angular.module('graphing.svg', [
     return {
       restrict: 'E',
       templateUrl: 'demos/bar',
+      controller: function($scope, ChartData) {
+        return $scope.demoData = ChartData.map(function(activity) {
+          activity.timestamp = Date.parse(activity.timestamp);
+          return activity;
+        });
+      }
+    };
+  }).value('ChartData', [
+    {
+      "timestamp": "2014-10-07T12:21:39.156Z",
+      "ip": "12.34.222.24",
+      "rtt": 168.08160845641805
+    }, {
+      "timestamp": "2014-10-07T12:21:40.233Z",
+      "ip": "12.34.222.80",
+      "rtt": 182.67290809530695
+    }, {
+      "timestamp": "2014-10-07T12:21:41.604Z",
+      "ip": "12.34.222.196",
+      "rtt": 90.39461855716031
+    }, {
+      "timestamp": "2014-10-07T12:21:44.215Z",
+      "ip": "12.34.222.183",
+      "rtt": 196.83835953615997
+    }, {
+      "timestamp": "2014-10-07T12:21:47.099Z",
+      "ip": "12.34.222.210",
+      "rtt": 185.73609346015866
+    }, {
+      "timestamp": "2014-10-07T12:21:50.006Z",
+      "ip": "12.34.222.45",
+      "rtt": 136.22120089509895
+    }, {
+      "timestamp": "2014-10-07T12:21:52.745Z",
+      "ip": "12.34.222.202",
+      "rtt": 127.713853331557
+    }, {
+      "timestamp": "2014-10-07T12:21:54.617Z",
+      "ip": "12.34.222.104",
+      "rtt": 196.45782668000285
+    }, {
+      "timestamp": "2014-10-07T12:21:56.903Z",
+      "ip": "12.34.222.121",
+      "rtt": 169.3510848600195
+    }, {
+      "timestamp": "2014-10-07T12:21:59.894Z",
+      "ip": "12.34.222.65",
+      "rtt": 192.26293245514398
+    }, {
+      "timestamp": "2014-10-07T12:22:02.795Z",
+      "ip": "12.34.222.48",
+      "rtt": 137.19813341560965
+    }, {
+      "timestamp": "2014-10-07T12:22:05.165Z",
+      "ip": "12.34.222.95",
+      "rtt": 176.43940796556373
+    }, {
+      "timestamp": "2014-10-07T12:22:08.163Z",
+      "ip": "12.34.222.200",
+      "rtt": 54.2772852229231
+    }, {
+      "timestamp": "2014-10-07T12:22:11.150Z",
+      "ip": "12.34.222.103",
+      "rtt": 172.52015491044085
+    }, {
+      "timestamp": "2014-10-07T12:22:14.123Z",
+      "ip": "12.34.222.104",
+      "rtt": 188.96025383757743
+    }, {
+      "timestamp": "2014-10-07T12:22:16.384Z",
+      "ip": "12.34.222.186",
+      "rtt": 160.31279474381805
+    }, {
+      "timestamp": "2014-10-07T12:22:19.255Z",
+      "ip": "12.34.222.77",
+      "rtt": 198.44986714991137
+    }, {
+      "timestamp": "2014-10-07T12:22:21.369Z",
+      "ip": "12.34.222.139",
+      "rtt": 145.30029339294018
+    }, {
+      "timestamp": "2014-10-07T12:22:21.625Z",
+      "ip": "12.34.222.66",
+      "rtt": 124.38252212018374
+    }, {
+      "timestamp": "2014-10-07T12:22:24.617Z",
+      "ip": "12.34.222.145",
+      "rtt": 198.66957575832197
+    }, {
+      "timestamp": "2014-10-07T12:22:27.481Z",
+      "ip": "12.34.222.193",
+      "rtt": 190.3397347987629
+    }, {
+      "timestamp": "2014-10-07T12:22:29.813Z",
+      "ip": "12.34.222.133",
+      "rtt": 192.58725408500638
+    }, {
+      "timestamp": "2014-10-07T12:22:32.328Z",
+      "ip": "12.34.222.202",
+      "rtt": 194.01061680203696
+    }, {
+      "timestamp": "2014-10-07T12:22:34.537Z",
+      "ip": "12.34.222.236",
+      "rtt": 172.81765827096362
+    }, {
+      "timestamp": "2014-10-07T12:22:37.295Z",
+      "ip": "12.34.222.130",
+      "rtt": 174.7213335262897
+    }, {
+      "timestamp": "2014-10-07T12:22:40.041Z",
+      "ip": "12.34.222.237",
+      "rtt": 190.46782695647124
+    }, {
+      "timestamp": "2014-10-07T12:22:42.592Z",
+      "ip": "12.34.222.110",
+      "rtt": 198.96502036365038
+    }, {
+      "timestamp": "2014-10-07T12:22:45.421Z",
+      "ip": "12.34.222.150",
+      "rtt": 199.8107335759425
+    }, {
+      "timestamp": "2014-10-07T12:22:47.395Z",
+      "ip": "12.34.222.123",
+      "rtt": 198.68002449378008
+    }, {
+      "timestamp": "2014-10-07T12:22:49.999Z",
+      "ip": "12.34.222.156",
+      "rtt": 199.98966969626002
+    }, {
+      "timestamp": "2014-10-07T12:22:51.791Z",
+      "ip": "12.34.222.62",
+      "rtt": 175.3739035975376
+    }, {
+      "timestamp": "2014-10-07T12:22:54.785Z",
+      "ip": "12.34.222.17",
+      "rtt": 199.62480727564326
+    }, {
+      "timestamp": "2014-10-07T12:22:57.402Z",
+      "ip": "12.34.222.68",
+      "rtt": 182.54399104039305
+    }, {
+      "timestamp": "2014-10-07T12:22:59.997Z",
+      "ip": "12.34.222.69",
+      "rtt": 189.0918499842584
+    }, {
+      "timestamp": "2014-10-07T12:23:02.812Z",
+      "ip": "12.34.222.44",
+      "rtt": 160.55392995522607
+    }, {
+      "timestamp": "2014-10-07T12:23:05.239Z",
+      "ip": "12.34.222.69",
+      "rtt": 189.98334413487444
+    }, {
+      "timestamp": "2014-10-07T12:23:07.371Z",
+      "ip": "12.34.222.118",
+      "rtt": 196.07290456011705
+    }, {
+      "timestamp": "2014-10-07T12:23:10.307Z",
+      "ip": "12.34.222.125",
+      "rtt": 188.1014765717045
+    }, {
+      "timestamp": "2014-10-07T12:23:12.992Z",
+      "ip": "12.34.222.19",
+      "rtt": 196.63671783512098
+    }, {
+      "timestamp": "2014-10-07T12:23:15.206Z",
+      "ip": "12.34.222.221",
+      "rtt": 187.58746681635557
+    }, {
+      "timestamp": "2014-10-07T12:23:17.546Z",
+      "ip": "12.34.222.171",
+      "rtt": 112.6714822941861
+    }, {
+      "timestamp": "2014-10-07T12:23:20.154Z",
+      "ip": "12.34.222.148",
+      "rtt": 196.12136260321824
+    }, {
+      "timestamp": "2014-10-07T12:23:22.277Z",
+      "ip": "12.34.222.49",
+      "rtt": 187.4246988357871
+    }, {
+      "timestamp": "2014-10-07T12:23:24.413Z",
+      "ip": "12.34.222.236",
+      "rtt": 181.19368646574137
+    }, {
+      "timestamp": "2014-10-07T12:23:26.377Z",
+      "ip": "12.34.222.167",
+      "rtt": 198.41559693547117
+    }, {
+      "timestamp": "2014-10-07T12:23:29.337Z",
+      "ip": "12.34.222.153",
+      "rtt": 181.73043817764778
+    }, {
+      "timestamp": "2014-10-07T12:23:31.876Z",
+      "ip": "12.34.222.16",
+      "rtt": 188.79585835996502
+    }, {
+      "timestamp": "2014-10-07T12:23:34.856Z",
+      "ip": "12.34.222.48",
+      "rtt": 192.79632528781204
+    }, {
+      "timestamp": "2014-10-07T12:23:37.793Z",
+      "ip": "12.34.222.210",
+      "rtt": 193.45238013848692
+    }, {
+      "timestamp": "2014-10-07T12:23:40.743Z",
+      "ip": "12.34.222.232",
+      "rtt": 143.91544645844087
+    }, {
+      "timestamp": "2014-10-07T12:23:43.633Z",
+      "ip": "12.34.222.243",
+      "rtt": 170.72592524363057
+    }, {
+      "timestamp": "2014-10-07T12:23:46.510Z",
+      "ip": "12.34.222.175",
+      "rtt": 195.639246196663
+    }, {
+      "timestamp": "2014-10-07T12:23:49.482Z",
+      "ip": "12.34.222.235",
+      "rtt": 176.0325000611148
+    }, {
+      "timestamp": "2014-10-07T12:23:52.356Z",
+      "ip": "12.34.222.43",
+      "rtt": 194.23462842081463
+    }, {
+      "timestamp": "2014-10-07T12:23:55.328Z",
+      "ip": "12.34.222.102",
+      "rtt": 194.0951997907922
+    }, {
+      "timestamp": "2014-10-07T12:23:56.541Z",
+      "ip": "12.34.222.3",
+      "rtt": 192.45070670667914
+    }, {
+      "timestamp": "2014-10-07T12:23:59.109Z",
+      "ip": "12.34.222.239",
+      "rtt": 188.3944087836643
+    }, {
+      "timestamp": "2014-10-07T12:24:02.059Z",
+      "ip": "12.34.222.98",
+      "rtt": 191.36307832639517
+    }, {
+      "timestamp": "2014-10-07T12:24:04.412Z",
+      "ip": "12.34.222.234",
+      "rtt": 85.62785129379532
+    }, {
+      "timestamp": "2014-10-07T12:24:07.290Z",
+      "ip": "12.34.222.64",
+      "rtt": 196.09847875360725
+    }, {
+      "timestamp": "2014-10-07T12:24:10.247Z",
+      "ip": "12.34.222.202",
+      "rtt": 199.2172917277107
+    }, {
+      "timestamp": "2014-10-07T12:24:12.624Z",
+      "ip": "12.34.222.68",
+      "rtt": 186.52607354607076
+    }, {
+      "timestamp": "2014-10-07T12:24:14.414Z",
+      "ip": "12.34.222.128",
+      "rtt": 179.58414968503666
+    }, {
+      "timestamp": "2014-10-07T12:24:17.381Z",
+      "ip": "12.34.222.195",
+      "rtt": 198.22636559428543
+    }, {
+      "timestamp": "2014-10-07T12:24:19.377Z",
+      "ip": "12.34.222.223",
+      "rtt": 116.46987605364527
+    }, {
+      "timestamp": "2014-10-07T12:24:22.256Z",
+      "ip": "12.34.222.162",
+      "rtt": 192.99315157565573
+    }, {
+      "timestamp": "2014-10-07T12:24:24.499Z",
+      "ip": "12.34.222.30",
+      "rtt": 199.83366743501648
+    }, {
+      "timestamp": "2014-10-07T12:24:26.676Z",
+      "ip": "12.34.222.129",
+      "rtt": 128.43489961883859
+    }, {
+      "timestamp": "2014-10-07T12:24:29.666Z",
+      "ip": "12.34.222.195",
+      "rtt": 199.3477162597989
+    }, {
+      "timestamp": "2014-10-07T12:24:32.275Z",
+      "ip": "12.34.222.5",
+      "rtt": 194.19350957998677
+    }, {
+      "timestamp": "2014-10-07T12:24:35.269Z",
+      "ip": "12.34.222.232",
+      "rtt": 193.22077703573197
+    }, {
+      "timestamp": "2014-10-07T12:24:37.810Z",
+      "ip": "12.34.222.142",
+      "rtt": 199.99227108843544
+    }, {
+      "timestamp": "2014-10-07T12:24:40.810Z",
+      "ip": "12.34.222.87",
+      "rtt": 175.75343225410802
+    }, {
+      "timestamp": "2014-10-07T12:24:43.465Z",
+      "ip": "12.34.222.121",
+      "rtt": 197.90272345834956
+    }, {
+      "timestamp": "2014-10-07T12:24:46.078Z",
+      "ip": "12.34.222.135",
+      "rtt": 167.24729219343976
+    }, {
+      "timestamp": "2014-10-07T12:24:48.472Z",
+      "ip": "12.34.222.48",
+      "rtt": 153.3313019394164
+    }, {
+      "timestamp": "2014-10-07T12:24:51.378Z",
+      "ip": "12.34.222.93",
+      "rtt": 199.9945908861114
+    }, {
+      "timestamp": "2014-10-07T12:24:53.825Z",
+      "ip": "12.34.222.65",
+      "rtt": 142.68204210614115
+    }, {
+      "timestamp": "2014-10-07T12:24:56.735Z",
+      "ip": "12.34.222.147",
+      "rtt": 199.716363088137
+    }, {
+      "timestamp": "2014-10-07T12:24:59.198Z",
+      "ip": "12.34.222.51",
+      "rtt": 186.30883414098417
+    }, {
+      "timestamp": "2014-10-07T12:25:02.198Z",
+      "ip": "12.34.222.143",
+      "rtt": 108.81980888815741
+    }, {
+      "timestamp": "2014-10-07T12:25:04.364Z",
+      "ip": "12.34.222.28",
+      "rtt": 197.9969325156788
+    }, {
+      "timestamp": "2014-10-07T12:25:06.866Z",
+      "ip": "12.34.222.110",
+      "rtt": 190.8143130221
+    }, {
+      "timestamp": "2014-10-07T12:25:09.700Z",
+      "ip": "12.34.222.101",
+      "rtt": 197.10897819030092
+    }, {
+      "timestamp": "2014-10-07T12:25:12.423Z",
+      "ip": "12.34.222.86",
+      "rtt": 198.19821900393384
+    }, {
+      "timestamp": "2014-10-07T12:25:14.634Z",
+      "ip": "12.34.222.172",
+      "rtt": 199.37934664520802
+    }, {
+      "timestamp": "2014-10-07T12:25:17.557Z",
+      "ip": "12.34.222.200",
+      "rtt": 162.60238332819748
+    }, {
+      "timestamp": "2014-10-07T12:25:20.560Z",
+      "ip": "12.34.222.143",
+      "rtt": 199.41398388739478
+    }, {
+      "timestamp": "2014-10-07T12:25:23.498Z",
+      "ip": "12.34.222.224",
+      "rtt": 199.3374226563996
+    }, {
+      "timestamp": "2014-10-07T12:25:26.498Z",
+      "ip": "12.34.222.130",
+      "rtt": 188.16966125632857
+    }, {
+      "timestamp": "2014-10-07T12:25:29.382Z",
+      "ip": "12.34.222.133",
+      "rtt": 193.4168271917877
+    }, {
+      "timestamp": "2014-10-07T12:25:32.363Z",
+      "ip": "12.34.222.209",
+      "rtt": 183.01776449930148
+    }, {
+      "timestamp": "2014-10-07T12:25:35.239Z",
+      "ip": "12.34.222.95",
+      "rtt": 164.72794964851568
+    }
+  ]);
+
+}).call(this);
+
+(function() {
+  angular.module('graphing.demos.line', ['graphing.svg', 'graphing.charts.line', 'demos.line.template']).config(function($stateProvider) {
+    return $stateProvider.state('demo.line', {
+      url: '/line',
+      views: {
+        'demo-line': {
+          template: '<line-demo />'
+        }
+      }
+    });
+  }).directive('lineDemo', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'demos/line',
       controller: function($scope, SalesData) {
         return $scope.demoData = SalesData.map(function(_, i) {
           return {
@@ -366,7 +854,7 @@ angular.module('graphing.svg', [
         });
       }
     };
-  });
+  }).value('SalesData', [1.46220, 1.47004, 1.49253, 1.49118, 1.49722, 1.50138, 1.50008, 1.51493, 1.50781, 1.50899, 1.53037, 1.58137, 1.54299, 1.53307, 1.55845, 1.56213, 1.54488, 1.56927, 1.55305, 1.55710, 1.56235, 1.58847, 1.59309, 1.58303, 1.59470]);
 
 }).call(this);
 
@@ -385,7 +873,7 @@ angular.module('graphing.svg', [
       restrict: 'E',
       templateUrl: 'demos/trig'
     };
-  }).controller('TrigCtrl', function($scope) {
+  }).controller('TrigCtrl', function($scope, ScaleSvc) {
     var i;
     $scope.data = [];
     i = 0;
@@ -618,6 +1106,74 @@ angular.module('graphing.svg.graphTick', [
     };
 })
 ;
+
+}).call(this);
+
+(function() {
+  angular.module('graphing.svg.tooltip', ['svg.graphTooltip.template']).directive('graphTooltip', function($templateCache, $compile) {
+    var hideTooltip, showTooltipAt, tooltip, tooltipData, tooltipOffset;
+    tooltipOffset = 0;
+    tooltip = null;
+    tooltipData = {
+      show: false,
+      position: [-50, -50],
+      text: "Tooltip!"
+    };
+    showTooltipAt = function($scope, at, text) {
+      if (text == null) {
+        text = tooltipData.text;
+      }
+      console.log('Showing tooltip at', at);
+      $scope.tooltipData.show = true;
+      $scope.tooltipData.text = text;
+      return $scope.tooltipData.position = at;
+    };
+    hideTooltip = function($scope) {
+      console.log('Hiding tooltip');
+      return $scope.tooltipData.show = false;
+    };
+    return {
+      restrict: 'A',
+      compile: function(tElement, tAttrs, tTransclude) {
+        return {
+          pre: function($scope, iElement, iAttrs) {
+            var lastSvg, parent, tooltipExp, tooltipTemplate;
+            if (!tooltip) {
+              parent = iElement;
+              lastSvg = null;
+              while ((parent = parent.parent()).length) {
+                if (parent[0].tagName === 'svg') {
+                  lastSvg = parent;
+                }
+              }
+              tooltipTemplate = $templateCache.get('svg/graphTooltip');
+              tooltipExp = $compile(tooltipTemplate);
+              tooltip = tooltipExp($scope);
+              lastSvg.append(tooltip);
+              return tooltipOffset = lastSvg[0].offsetLeft;
+            }
+          },
+          post: function($scope, iElement, iAttrs) {
+            iElement.bind('mouseover', function(event) {
+              return $scope.$apply(function() {
+                var position;
+                position = [event.x - tooltipOffset, 50];
+                return showTooltipAt($scope, position, iAttrs.graphTooltip);
+              });
+            });
+            return iElement.bind('mouseout', function() {
+              return $scope.$apply(function() {
+                return hideTooltip($scope);
+              });
+            });
+          }
+        };
+      },
+      controller: function($scope) {
+        return $scope.tooltipData = tooltipData;
+      }
+    };
+  });
 
 }).call(this);
 

@@ -35,9 +35,11 @@ angular.module('graphing.svg.tooltip', [
                 lastSvg.append tooltip
                 tooltipOffset = lastSvg[0].offsetLeft
         post: ($scope, iElement, iAttrs)->
+            # iAttrs.graphTooltip = $compile(iAttrs.graphTooltip)($scope)
             iElement.bind 'mouseover', (event)->
                 $scope.$apply ->
-                    showTooltipAt $scope, [event.x - tooltipOffset, 50]
+                    position = [event.x - tooltipOffset, 50]
+                    showTooltipAt $scope, position, iAttrs.graphTooltip
             iElement.bind 'mouseout', ->
                 $scope.$apply ->
                     hideTooltip $scope

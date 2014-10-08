@@ -15,8 +15,8 @@ svg.chart.chart-bar(
             ng-init=""
         )
             rect.bar(
-                graph-tooltip
                 ng-repeat="point in chartData"
+                graph-tooltip="{{ '' + $chartOptions.x(point) + ', ' + $chartOptions.y(point) }}"
                 at="[ \
                     $scales.x($chartOptions.x(point)) - (barWidth / 2), \
                     $scales.y($chartOptions.y(point)) \

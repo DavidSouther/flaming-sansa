@@ -1,12 +1,10 @@
-svg(
-    id="graphingTooltip"
-    width="100%"
-    height="100%"
+div#graphingTooltip.tooltip(
+    ng-style="{\
+        position: 'absolute',\
+        display: tooltipData.show ? 'inherit' : 'none',\
+        top: tooltipData.position[1]  + 'px',\
+        left: tooltipData.position[0] + 'px'\
+    }"
+    style="border: "
 )
-    g(
-        ng-attr-visibility="{{ tooltipData.show ? 'visible' : 'hidden' }}"
-        style="background: peach;"
-    )
-        text(
-            at="tooltipData.position"
-        ) {{ tooltipData.text }}
+    | {{ tooltipData.text }}

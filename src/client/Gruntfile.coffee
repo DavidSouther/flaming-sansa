@@ -109,8 +109,6 @@ module.exports = (grunt)->
                 'all.css'
                 'screen.css'
                 'print.css'
-
-                'socket.io/socket.io.js'
             ]
         options.dest = Path.resolve process.cwd(), options.dest
         getFile = (file)->
@@ -151,7 +149,7 @@ module.exports = (grunt)->
                 done pass
 
         require('../../app.js')
-        setTimeout writeFiles, 3000
+        setTimeout writeFiles, 4000
 
     grunt.registerTask 'testClient',
         'Run karma tests against the client.',

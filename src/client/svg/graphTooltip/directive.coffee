@@ -8,12 +8,19 @@ angular.module('graphing.svg.tooltip', [
         show: no
         position: [-50, -50]
         text: "Tooltip!"
+    tooltipStyle = null
 
     showTooltipAt = ($scope, at, text = tooltipData.text)->
         console.log 'Showing tooltip at', at
         $scope.tooltipData.show = yes
         $scope.tooltipData.text = text
         $scope.tooltipData.position = at
+        #
+        # tooltipStyle.display = show ? 'inherit' : 'hidden'
+        #     position: 'absolute'
+        #     top: position[1]  + 'px'
+        #     left: position[0] + 'px'
+
 
     hideTooltip = ($scope)->
         console.log 'Hiding tooltip'
@@ -32,13 +39,13 @@ angular.module('graphing.svg.tooltip', [
                 tooltipTemplate = $templateCache.get('svg/graphTooltip')
                 tooltipExp = $compile(tooltipTemplate)
                 tooltip = tooltipExp($scope)
-                lastSvg.append tooltip
-                tooltipOffset = lastSvg[0].offsetLeft
+                lastSvg.parent().append tooltip
+                # tooltipOffset = lastSvg[0].offsetLeft
         post: ($scope, iElement, iAttrs)->
             # iAttrs.graphTooltip = $compile(iAttrs.graphTooltip)($scope)
             iElement.bind 'mouseover', (event)->
                 $scope.$apply ->
-                    position = [event.x - tooltipOffset, 50]
+                    position = [event.x, 50]
                     showTooltipAt $scope, position, iAttrs.graphTooltip
             iElement.bind 'mouseout', ->
                 $scope.$apply ->

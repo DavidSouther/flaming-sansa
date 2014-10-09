@@ -83,6 +83,7 @@ module.exports = (grunt)->
 
                         'node_modules/ng-stassets/node_modules/' +
                             'angular-builds/angular-mocks.js'
+                        'node_modules/mockasing/src/tools/*'
 
                         'src/client/**/*mock.coffee'
                         'src/client/tools/**/*'

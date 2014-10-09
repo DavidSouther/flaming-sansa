@@ -1,7 +1,10 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
 env: TRAVIS=1
+notifications:
+  slack:
+    secure: J6Sn5JHyqxvhYoahrC4DhsccChCRJ9U6Mdghrvk6z0d58evR8BiPYczllhVCcCwqRpgjpToF+S3GYauSeP9NEAUZm6SLYBlGpq29XDGsc/jGXzGo4uUpPphFZiGdEnyjCLcRlJyjR9gdPsbhJsncbFV7CFD0Rh7YZrZ9HmfgC+c=

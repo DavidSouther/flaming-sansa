@@ -1,2 +1,2 @@
 global.root = __dirname
-require('ng-stassets/express')(require('./server')).start()
+require('rupert')(require('./server')).start()

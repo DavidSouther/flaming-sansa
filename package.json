@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "grunt": "^0.4.5",
     "rupert": "^0.1.0",
     "rupert-grunt": "0.0.1"
   }

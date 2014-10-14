@@ -10,3 +10,4 @@ describe 'Graphing SVG', ->
             element = renderElement 'text', data, attrs, transclude
             element.attr('x').should.equal '5'
             element.attr('y').should.equal '1.2'
+            element.text().should.equal 'Some Text'

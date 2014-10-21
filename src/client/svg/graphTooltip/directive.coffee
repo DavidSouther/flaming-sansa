@@ -19,9 +19,9 @@ angular.module('graphing.svg.tooltip', [
 
 .directive 'chartTooltipTemplate', (TooltipTemplateService)->
     restrict: 'EA'
-    link: ($scope, element)->
-        TooltipTemplateService.set element
-        element.remove()
+    compile: (tElement)->
+        TooltipTemplateService.set tElement.children()
+        tElement.remove()
 
 .directive 'graphTooltip', ($templateCache, $compile, TooltipTemplateService)->
     restrict: 'A'

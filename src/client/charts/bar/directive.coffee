@@ -14,8 +14,7 @@ angular.module('graphing.charts.bar', [
     priority: 500
     replace: yes
     transclude: yes
-    link: ($scope, el, attrs, ctrl, transclude)->
-        transclude (clone)-> el.append clone
+    link: ($scope)->
         $scope.barWidth = Math.max(4,
             Math.min(760 / $scope.chartData.length)
         )

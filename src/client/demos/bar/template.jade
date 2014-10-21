@@ -21,8 +21,8 @@ ion-view(title="Bar Demo")
             chart-tooltip-template
                 ul
                     li
-                        b Year:
-                        | {{ $chartOptions.x(point) | date:'mm:ss.sss' }}
+                        b Time:
+                        | {{ $chartOptions.x(point)|date:'mm:ss.sss' }}
                     li
-                        b Sales:
-                        | {{ $chartOptions.y(point) | number:o }}
+                        b RTT:
+                        | {{ $chartOptions.y(point)| number:0 }}

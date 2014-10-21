@@ -1,17 +1,21 @@
 angular.module('graphing.charts.bar', [
+    'graphing.svg'
     'graphing.scales'
     'graphing.charts.base'
     'graphing.charts.axis'
     'charts.bar.template'
 ])
-.directive 'barChart', ($animate)->
+.directive 'barChart', ($compile)->
     restrict: 'AE'
     scope:
         chartData: '='
         chartOptions: '='
     templateUrl: 'charts/bar'
-    require: 'baseChart'
-    controller: ($scope, $timeout)->
+    priority: 500
+    replace: yes
+    transclude: yes
+    link: ($scope, el, attrs, ctrl, transclude)->
+        transclude (clone)-> el.append clone
         $scope.barWidth = Math.max(4,
             Math.min(760 / $scope.chartData.length)
         )

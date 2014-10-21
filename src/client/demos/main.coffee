@@ -19,4 +19,4 @@ angular.module('graphing.demos', [
                         'trig'
                         'bar'
                     ]
-    $urlRouterProvider.otherwise "/demo/trig"
+    # $urlRouterProvider.otherwise "/demo/trig"

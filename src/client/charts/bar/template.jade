@@ -1,32 +1,34 @@
-svg.chart.chart-bar(
-    base-chart
-    width='100%'
-    height='100%'
-    graph-scales="{\
-        x: [$chartOptions.scale.x, $chartOptions.range.x.min, $chartOptions.range.x.max],\
-        y: [$chartOptions.scale.x, $chartOptions.range.y.max, $chartOptions.range.y.min],\
-    }"
-    shape-rendering="geometricPrecision"
-)
-    g.decor
-        axis
-    g.graph
-        g.bars(
-            ng-init=""
-        )
-            rect.bar(
-                ng-repeat="point in chartData"
-                graph-tooltip="{{ '' + $chartOptions.x(point) + ', ' + $chartOptions.y(point) }}"
-                at="[ \
-                    $scales.x($chartOptions.x(point)) - (barWidth / 2), \
-                    $scales.y($chartOptions.y(point)) \
-                ]"
-                ng-attr-width="{{ barWidth - 2 }}"
-                ng-attr-height="{{ \
-                    $scales.y($chartOptions.range.y.min) - \
-                    $scales.y($chartOptions.y(point)) \
-                }}"
-                fill="#ef4e3a"
-                stroke="#111"
-                stroke-width="1"
+div
+    ng-transclude
+    svg.chart.chart-bar(
+        base-chart
+        width='100%'
+        height='100%'
+        graph-scales="{\
+            x: [$chartOptions.scale.x, $chartOptions.range.x.min, $chartOptions.range.x.max],\
+            y: [$chartOptions.scale.x, $chartOptions.range.y.max, $chartOptions.range.y.min],\
+        }"
+        shape-rendering="geometricPrecision"
+    )
+        g.decor
+            axis
+        g.graph
+            g.bars(
+                ng-init=""
             )
+                rect.bar(
+                    ng-repeat="point in chartData"
+                    graph-tooltip="{{ '' + $chartOptions.x(point) + ', ' + $chartOptions.y(point) }}"
+                    at="[ \
+                        $scales.x($chartOptions.x(point)) - (barWidth / 2), \
+                        $scales.y($chartOptions.y(point)) \
+                    ]"
+                    ng-attr-width="{{ barWidth - 2 }}"
+                    ng-attr-height="{{ \
+                        $scales.y($chartOptions.range.y.min) - \
+                        $scales.y($chartOptions.y(point)) \
+                    }}"
+                    fill="#ef4e3a"
+                    stroke="#111"
+                    stroke-width="1"
+                )

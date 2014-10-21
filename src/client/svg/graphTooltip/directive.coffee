@@ -1,35 +1,50 @@
 angular.module('graphing.svg.tooltip', [
     'svg.graphTooltip.template'
 ])
-.directive 'graphTooltip', ($templateCache, $compile)->
-    tooltipOffset = 0
-    tooltip = null
-    tooltipData =
-        show: no
-        position: [-50, -50]
-        text: "Tooltip!"
-    tooltipStyle = null
+.value('DefaultTooltipTemplate', "<div>{{ tooltipData.text }}</div>")
 
-    showTooltipAt = ($scope, at, text = tooltipData.text)->
-        console.log 'Showing tooltip at', at
-        $scope.tooltipData.show = yes
-        $scope.tooltipData.text = text
-        $scope.tooltipData.position = at
-        #
-        # tooltipStyle.display = show ? 'inherit' : 'hidden'
-        #     position: 'absolute'
-        #     top: position[1]  + 'px'
-        #     left: position[0] + 'px'
+.service 'TooltipTemplateService', ($compile, DefaultTooltipTemplate)->
+    tooltipTemplate = null
+    _tooltipTemplate = null
+    set = (template)->
+        _tooltipTemplate = template
+        tooltipTemplate = $compile(template)
+    get = -> tooltipTemplate
+    raw = -> _tooltipTemplate
+    render = ($scope, fn = angular.noop)-> get()($scope, fn)
 
+    set(DefaultTooltipTemplate)
 
-    hideTooltip = ($scope)->
-        console.log 'Hiding tooltip'
-        $scope.tooltipData.show = no
+    { get, set, render, raw }
 
+.directive 'chartTooltipTemplate', (TooltipTemplateService)->
+    restrict: 'EA'
+    link: ($scope, element)->
+        TooltipTemplateService.set element
+        element.remove()
+
+.directive 'graphTooltip', ($templateCache, $compile, TooltipTemplateService)->
     restrict: 'A'
-    # templateUrl: 'svg/graphTooltip'
     compile: (tElement, tAttrs, tTransclude)->
+        tooltipOffset = 0
+        tooltip = null
+        tooltipData =
+            show: no
+            position: [-50, -50]
+            text: "Tooltip!"
+        tooltipStyle = null
+
+        showTooltipAt = ($scope, at, text = tooltipData.text)->
+            $scope.tooltipData.show = yes
+            $scope.tooltipData.text = text
+            $scope.tooltipData.position = at
+            tooltip.empty().append TooltipTemplateService.render $scope
+
+        hideTooltip = ($scope)->
+            $scope.tooltipData.show = no
+
         pre: ($scope, iElement, iAttrs)->
+            $scope.tooltipData = tooltipData
             unless tooltip
                 parent = iElement
                 lastSvg = null
@@ -40,9 +55,8 @@ angular.module('graphing.svg.tooltip', [
                 tooltipExp = $compile(tooltipTemplate)
                 tooltip = tooltipExp($scope)
                 lastSvg.parent().append tooltip
-                # tooltipOffset = lastSvg[0].offsetLeft
+
         post: ($scope, iElement, iAttrs)->
-            # iAttrs.graphTooltip = $compile(iAttrs.graphTooltip)($scope)
             iElement.bind 'mouseover', (event)->
                 $scope.$apply ->
                     position = [event.x, 50]
@@ -50,5 +64,3 @@ angular.module('graphing.svg.tooltip', [
             iElement.bind 'mouseout', ->
                 $scope.$apply ->
                     hideTooltip $scope
-    controller: ($scope)->
-        $scope.tooltipData = tooltipData

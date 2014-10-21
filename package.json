@@ -13,6 +13,7 @@
   "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
     "rupert": "^0.1.0",
     "rupert-grunt": "0.0.1"
   }

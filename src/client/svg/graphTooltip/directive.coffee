@@ -59,7 +59,11 @@ angular.module('graphing.svg.tooltip', [
         post: ($scope, iElement, iAttrs)->
             iElement.bind 'mouseover', (event)->
                 $scope.$apply ->
-                    position = [event.x, 50]
+                    bounds = event.toElement.getBoundingClientRect()
+                    position = [
+                        event.x
+                        event.y - 73 # WHY IS THIS 73!?!?
+                    ]
                     showTooltipAt $scope, position, iAttrs.graphTooltip
             iElement.bind 'mouseout', ->
                 $scope.$apply ->

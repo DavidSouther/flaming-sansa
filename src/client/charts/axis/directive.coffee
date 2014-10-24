@@ -40,5 +40,6 @@ angular.module('graphing.charts.axis', [
     restrict: 'EA'
     replace: yes
     templateUrl: 'charts/axis'
+    templateNamespace: 'svg'
     controller: ($scope)->
         AxisCtrl.apply($scope)

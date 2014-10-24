@@ -1,14 +1,14 @@
 angular.module('graphing.demos.line', [
     'graphing.svg'
+
+    'graphing.demos.provider'
+
     'graphing.charts.line'
     'demos.line.template'
 ])
-.config ($stateProvider)->
-    $stateProvider.state 'demo.line',
-        url: '/line'
-        views:
-            'demo-line':
-                template: '<line-demo />'
+.config (demosProvider)->
+    demosProvider.demo 'line',
+        template: '<line-demo />'
 
 .directive 'lineDemo', ->
     restrict: 'E'

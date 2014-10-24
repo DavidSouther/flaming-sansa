@@ -1,20 +1,16 @@
 angular.module('graphing.demos.trig', [
     'graphing.scales'
+    'graphing.demos.provider'
     'demos.trig.template'
 ])
-.config ($stateProvider)->
-    $stateProvider.state 'demo.trig',
-        url: '/trig',
-        views:
-            'demo-trig':
-                template: '<trig-demo />'
+.config (demosProvider)->
+    demosProvider.demo 'trig',
+        template: '<trig-demo />'
 .directive 'trigDemo', ->
     restrict: 'E'
     templateUrl: 'demos/trig'
 .controller 'TrigCtrl', ($scope, ScaleSvc)->
     $scope.data = []
-
-
 
     i = 0
     while i < 84

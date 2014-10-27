@@ -8,10 +8,14 @@ class BaseChart
                 (_)=> _[@$scope.chartOptions.x]
             else if angular.isFunction @$scope.chartOptions.x
                 @$scope.chartOptions.x
+            else
+                (_, i)=> _
             y: if angular.isString @$scope.chartOptions.y
                 (_)=> _[@$scope.chartOptions.y]
             else if angular.isFunction @$scope.chartOptions.y
                 @$scope.chartOptions.y
+            else
+                (_, i)=> i
 
             range: @$scope.chartOptions.range or {}
             axis: @$scope.chartOptions.axis or {}
@@ -34,11 +38,16 @@ class BaseChart
             x: @$scope.$chartOptions.range.x or {}
             y: @$scope.$chartOptions.range.y or {}
 
+
         @$scope.$chartOptions.range.x.min or= @$scope.$chartData.$x.$min
         @$scope.$chartOptions.range.x.max or= @$scope.$chartData.$x.$max
-        @$scope.$chartOptions.range.y.min or= @$scope.$chartData.$y.$min
-        @$scope.$chartOptions.range.y.max or= @$scope.$chartData.$y.$max
 
+        if @$scope.$chartOptions.domain
+            @$scope.$chartOptions.range.y.min or= @$scope.$chartOptions.domain[0]
+            @$scope.$chartOptions.range.y.max or= @$scope.$chartOptions.domain[1]
+        else
+            @$scope.$chartOptions.range.y.min or= @$scope.$chartData.$y.$min
+            @$scope.$chartOptions.range.y.max or= @$scope.$chartData.$y.$max
 
     setScales: ->
         @$scope.$chartOptions.scale = @$scope.chartOptions.scale or {}
@@ -46,7 +55,7 @@ class BaseChart
         @$scope.$chartOptions.scale.y or= 'linear'
 
     calculateMargins: ->
-        @$scope.$chartOptions.margins or= {}
+        @$scope.$chartOptions.margins = @$scope.chartOptions.margins or {}
         @$scope.$chartOptions.margins.top or= 10
         @$scope.$chartOptions.margins.bottom or= 30
         @$scope.$chartOptions.margins.left or= 50

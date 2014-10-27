@@ -1,0 +1,9 @@
+ion-view(title="Boxplot Demo")
+    ion-content.padding#boxplot-demo
+        h1 Boxplot Demo
+        span(ng-repeat="experiment in demoData")
+            boxplot(
+                style="width: 120px; height: 550px; display: inline-block;"
+                chart-data="experiment"
+                chart-options="{domain: domain, whiskers: iqr, margins: {top: 10, right: 50, bottom: 20, left: 50}}"
+            )

@@ -6,4 +6,5 @@ angular.module('graphing.demos', [
     'graphing.demos.trig'
     'graphing.demos.line'
     'graphing.demos.bar'
+    'graphing.demos.boxplot'
 ])

@@ -21,7 +21,10 @@ angular.module('graphing.svg.tooltip', [
     restrict: 'EA'
     compile: (tElement)->
         TooltipTemplateService.set tElement.children()
-        tElement.remove()
+        tElement.addClass('ng-hide') # Better way?
+        # tElement.parent().remove('chart-tooltip-template')
+        # tElement.remove()
+        # tElement.replaceWith('')
 
 .directive 'graphTooltip', ($templateCache, $compile, TooltipTemplateService)->
     restrict: 'A'

@@ -5,14 +5,18 @@ angular.module('graphing.svg.svg', [
     return {
         priority: 650,
         restrict: 'E',
-        link: function($scope, $element){
-            var e = $element[0];
-            var set = function set(){
-                $scope.$width = e.offsetWidth || e.clientWidth;
-                $scope.$height = e.offsetHeight || e.clientHeight;
+        compile: function(){
+            return {
+                pre: function($scope, $element){
+                    var e = $element[0];
+                    var set = function set(){
+                        $scope.$width = e.offsetWidth || e.clientWidth;
+                        $scope.$height = e.offsetHeight || e.clientHeight;
+                    };
+                    set();
+                    $rootScope.$on('Window Resized', set);
+                }
             };
-            set();
-            $rootScope.$on('Window Resized', set);
         }
     };
 })

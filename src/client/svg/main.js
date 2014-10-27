@@ -6,6 +6,7 @@ angular.module('graphing.svg', [
     'graphing.svg.graphTick',
     'graphing.svg.path',
     'graphing.svg.radius',
+    'graphing.svg.rescale',
     'graphing.svg.scatterPoint',
     'graphing.svg.svg',
     'graphing.svg.to'

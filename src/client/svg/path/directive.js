@@ -25,11 +25,7 @@ angular.module('graphing.svg.path', [
             tmin += tstep;
         }
 
-        var p0 = points[0];
-        var m = '' + p0[0] + ',' + p0[1];
-
-        var path = 'M' + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
-        return path;
+        return d3.svg.line().interpolate('monotone')(points);
     };
 })
 .filter('path', function(){
@@ -37,11 +33,8 @@ angular.module('graphing.svg.path', [
         var points = data.map(function(d, i){
             return [xscale(interp.x(d, i)), yscale(interp.y(d, i))];
         });
-        var p0 = points[0];
-        var m = '' + p0[0] + ',' + p0[1];
 
-        var path = 'M' + m + d3_svg_lineHermite(points, d3_svg_lineMonotoneTangents(points));
-        return path;
+        return d3.svg.line().interpolate('monotone')(points);
     };
 })
 ;

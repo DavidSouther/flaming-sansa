@@ -1,10 +1,11 @@
 {
     "name": "graphing",
     "stassets": {
-        "root": "./src/client",
         "verbose": true,
-        "additionalTypes": [
-            "d3/**/*"
-        ]
+        "root": "./src/client",
+        "vendors": {
+            "prefix": [ "./node_modules" ],
+            "js": [ "d3-util/d3.js" ]
+        }
     }
 }

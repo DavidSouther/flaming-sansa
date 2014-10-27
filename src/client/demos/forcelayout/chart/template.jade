@@ -1,0 +1,17 @@
+svg(
+    width="100%"
+    height="100%"
+)
+    line.link(
+        ng-repeat="link in chartData.links"
+        ng-attr-style="stroke-width: {{ sqrt(link.value) }};"
+        from="[link.source.x, link.source.y]"
+        to="[link.target.x, link.target.y]"
+    )
+    circle.node(
+        ng-repeat="node in chartData.nodes"
+        ng-attr-style="fill: {{ color(node.group) }};"
+        center="[node.x, node.y]"
+        r=5
+    )
+        title {{ node.name }}

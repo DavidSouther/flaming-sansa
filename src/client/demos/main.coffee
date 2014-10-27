@@ -7,4 +7,5 @@ angular.module('graphing.demos', [
     'graphing.demos.line'
     'graphing.demos.bar'
     'graphing.demos.boxplot'
+    'graphing.demos.forcelayout'
 ])

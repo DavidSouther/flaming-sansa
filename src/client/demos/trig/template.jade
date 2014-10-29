@@ -1,134 +1,133 @@
-ion-view(title="Trig Demo")
-    ion-content.padding#trig-demo
-        //- ng-init to set a variety of initial values.
-        svg(
-            width='100%'
-            height='100%'
-            ng-init="\
-                x = { min: -1.2, max: 5 };\
-                y = {};\
-                time = 0;\
-                delta = .015 / 2;\
-                value = {x: Math.PI, y: 0};\
-            "
-
+demo(title="Trig Demo")
+    //- ng-init to set a variety of initial values.
+    svg(
+        width='100%'
+        height='100%'
+        ng-init="\
+            x = { min: -1.2, max: 5 };\
+            y = {};\
+            time = 0;\
+            delta = .015 / 2;\
+            value = {x: Math.PI, y: 0};\
+        "
+    
+        svg-rescale="\
+            y.max = ($height * (x.max - x.min)) * (1 / (2 * $width));\
+            y.min = -y.max;\
+        "
+    
+        graph-scales="{\
+            x: ['linear', x.min, x.max],\
+            y: ['linear', y.min, y.max]\
+        }"
+    )
+        text(
+            at="[x.scaled.PI, y.scaled.zero + 24]"
+            text-anchor="middle"
+        ) {{ y }}
+        g.vis.trig(
+            ng-controller="TrigCtrl"
             svg-rescale="\
-                y.max = ($height * (x.max - x.min)) * (1 / (2 * $width));\
-                y.min = -y.max;\
+                x.scaled = { \
+                    min: $scales.x(x.min), \
+                    max: $scales.x(x.max), \
+                    zero: $scales.x(0), \
+                    PI: $scales.x(Math.PI) \
+                }; \
+                y.scaled = { \
+                    min: $scales.y(y.min), \
+                    max: $scales.y(y.max), \
+                    zero: $scales.y(0), \
+                    PI: $scales.y(Math.PI) \
+                }; \
             "
-
-            graph-scales="{\
-                x: ['linear', x.min, x.max],\
-                y: ['linear', y.min, y.max]\
-            }"
+            graph-tick="\
+                time = time + delta;\
+                value.x = $scales.x(  Math.cos(time) );\
+                value.y = $scales.y( -Math.sin(time) );\
+            "
         )
-            text(
-                at="[x.scaled.PI, y.scaled.zero + 24]"
-                text-anchor="middle"
-            ) {{ y }}
-            g.vis.trig(
-                ng-controller="TrigCtrl"
-                svg-rescale="\
-                    x.scaled = { \
-                        min: $scales.x(x.min), \
-                        max: $scales.x(x.max), \
-                        zero: $scales.x(0), \
-                        PI: $scales.x(Math.PI) \
-                    }; \
-                    y.scaled = { \
-                        min: $scales.y(y.min), \
-                        max: $scales.y(y.max), \
-                        zero: $scales.y(0), \
-                        PI: $scales.y(Math.PI) \
-                    }; \
-                "
-                graph-tick="\
-                    time = time + delta;\
-                    value.x = $scales.x(  Math.cos(time) );\
-                    value.y = $scales.y( -Math.sin(time) );\
-                "
-            )
-                g.decor
-                    g.X
+            g.decor
+                g.X
+                    line.axis(
+                        from="[x.scaled.min, y.scaled.zero]"
+                        to="[x.scaled.max, y.scaled.zero]"
+                    )
+                    g.tick
                         line.axis(
-                            from="[x.scaled.min, y.scaled.zero]"
-                            to="[x.scaled.max, y.scaled.zero]"
+                            from="[x.scaled.PI, y.scaled.zero]"
+                            to="[x.scaled.PI, y.scaled.zero + 8]"
                         )
-                        g.tick
-                            line.axis(
-                                from="[x.scaled.PI, y.scaled.zero]"
-                                to="[x.scaled.PI, y.scaled.zero + 8]"
-                            )
-                            text(
-                                at="[x.scaled.PI, y.scaled.zero + 24]"
-                                text-anchor="middle"
-                            ) π
-                    g.Y
-                        line.axis(
-                            from="[x.scaled.zero, y.scaled.min]"
-                            to="[x.scaled.zero, y.scaled.max]"
-                        )
-
-                g.graph
-                    path.sine(
-                        ng-attr-d="{{ data | path:sine:$scales.x:$scales.y }}"
+                        text(
+                            at="[x.scaled.PI, y.scaled.zero + 24]"
+                            text-anchor="middle"
+                        ) π
+                g.Y
+                    line.axis(
+                        from="[x.scaled.zero, y.scaled.min]"
+                        to="[x.scaled.zero, y.scaled.max]"
                     )
-                    line.sine(
-                        from="[value.x, y.scaled.zero]"
-                        to="[value.x, value.y]"
-                    )
-                    path.cosine(
-                        ng-attr-d="{{ data | path:cosine:$scales.x:$scales.y }}"
-                    )
-                    line.cosine(
-                        from="[ x.scaled.zero, value.y ]"
-                        to="[ value.x, value.y ]"
-                    )
-                    line.exsecant(
-                        from="[x.scaled.zero, y.scaled.zero]"
-                        to="[ \
-                            $scales.x(Math.sign(Math.cos(time))), \
-                            $scales.y(\
-                                -Math.sign(Math.sin(time)) * \
-                                Math.abs(Math.sin(time) / Math.cos(time)) \
-                            ) \
-                        ]\
-                        "
-                    )
-                    //- path.tangent(
-                    //-     ng-attr-d="{{ data | path:tangent:$scales.x:$scales.y }}"
-                    //- )
-                    line.tangent(
-                        from="[ \
-                            $scales.x(Math.sign(Math.cos(time))), \
-                            y.scaled.zero \
-                        ]"
-                        to="[ \
-                            $scales.x(Math.sign(Math.cos(time))), \
-                            $scales.y(\
-                                -Math.sign(Math.sin(time)) * \
-                                Math.abs(Math.sin(time) / Math.cos(time)) \
-                            ) \
-                        ]\
-                        "
-                    )
-                    line.hypotenuse(
-                        from="[ x.scaled.zero, y.scaled.zero ]"
-                        to="[value.x, value.y]"
-                    )
-                    circle.circle(
-                        center="[x.scaled.zero, y.scaled.zero]"
-                        radius=" $scales.x(1) - $scales.x(0) "
-                    )
-                    circle.dot(
-                        center="[ x.scaled.zero, value.y ]"
-                        r='4'
-                    )
-                    text.label(at="[2, 24]")
-                        | R = {{ Math.floor( time / Math.PI ) }}
-                    //- text.label(at="[2, 48]")
-                    //-     | Sin = {{ Math.sin(time) }}
-                    //- text.label(at="[2, 72]")
-                    //-     | Cos = {{ Math.cos(time) }}
-                    //- text.label(at="[2, 96]")
-                    //-     | Tan = {{ Math.sin(time) / Math.cos(time) }}
+    
+            g.graph
+                path.sine(
+                    ng-attr-d="{{ data | path:sine:$scales.x:$scales.y }}"
+                )
+                line.sine(
+                    from="[value.x, y.scaled.zero]"
+                    to="[value.x, value.y]"
+                )
+                path.cosine(
+                    ng-attr-d="{{ data | path:cosine:$scales.x:$scales.y }}"
+                )
+                line.cosine(
+                    from="[ x.scaled.zero, value.y ]"
+                    to="[ value.x, value.y ]"
+                )
+                line.exsecant(
+                    from="[x.scaled.zero, y.scaled.zero]"
+                    to="[ \
+                        $scales.x(Math.sign(Math.cos(time))), \
+                        $scales.y(\
+                            -Math.sign(Math.sin(time)) * \
+                            Math.abs(Math.sin(time) / Math.cos(time)) \
+                        ) \
+                    ]\
+                    "
+                )
+                //- path.tangent(
+                //-     ng-attr-d="{{ data | path:tangent:$scales.x:$scales.y }}"
+                //- )
+                line.tangent(
+                    from="[ \
+                        $scales.x(Math.sign(Math.cos(time))), \
+                        y.scaled.zero \
+                    ]"
+                    to="[ \
+                        $scales.x(Math.sign(Math.cos(time))), \
+                        $scales.y(\
+                            -Math.sign(Math.sin(time)) * \
+                            Math.abs(Math.sin(time) / Math.cos(time)) \
+                        ) \
+                    ]\
+                    "
+                )
+                line.hypotenuse(
+                    from="[ x.scaled.zero, y.scaled.zero ]"
+                    to="[value.x, value.y]"
+                )
+                circle.circle(
+                    center="[x.scaled.zero, y.scaled.zero]"
+                    radius=" $scales.x(1) - $scales.x(0) "
+                )
+                circle.dot(
+                    center="[ x.scaled.zero, value.y ]"
+                    r='4'
+                )
+                text.label(at="[2, 24]")
+                    | R = {{ Math.floor( time / Math.PI ) }}
+                //- text.label(at="[2, 48]")
+                //-     | Sin = {{ Math.sin(time) }}
+                //- text.label(at="[2, 72]")
+                //-     | Cos = {{ Math.cos(time) }}
+                //- text.label(at="[2, 96]")
+                //-     | Tan = {{ Math.sin(time) / Math.cos(time) }}

@@ -1,6 +1,6 @@
 angular.module('graphing.demos.trig', [
     'graphing.scales'
-    'graphing.demos.provider'
+    'graphing.demos.demo'
     'demos.trig.template'
 ])
 .config (demosProvider)->

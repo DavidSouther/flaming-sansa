@@ -24,18 +24,19 @@ angular.module('graphing.demos.forcelayout', [
     # require: 'baseChart'
     scope:
         chartData: '='
-    compile: ->
-        post: ($scope)->
-            $scope.sqrt = Math.sqrt
+    controller: ($scope)->
+        $scope.graphmax = 200
 
-            $scope.color = d3.scale.category20()
-            $scope.force = d3.layout.force()
-                .charge(-120)
-                .linkDistance(30)
-                .nodes($scope.chartData.nodes)
-                .links($scope.chartData.links)
-                .size([$scope.$width, $scope.$height])
-                .start()
+        $scope.sqrt = Math.sqrt
+
+        $scope.color = d3.scale.category20()
+        $scope.force = d3.layout.force()
+            .charge(-120)
+            .linkDistance(30)
+            .nodes($scope.chartData.nodes)
+            .links($scope.chartData.links)
+            .size([-$scope.graphmax, $scope.graphmax])
+            .start()
 
 .value 'LesMisCoincidence',{
   "nodes":[

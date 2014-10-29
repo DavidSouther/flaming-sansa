@@ -1,4 +1,5 @@
 angular.module('graphing.demos.demo',[
+    'graphing.demos.provider'
     'demos.demo.template'
 ]).directive 'demo', ->
     restrict: 'E'

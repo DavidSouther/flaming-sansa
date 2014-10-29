@@ -1,4 +1,6 @@
 angular.module('graphing.demos.forcelayout', [
+    'graphing.demos.demo'
+
     'graphing.svg'
 
     'graphing.charts.base'
@@ -34,10 +36,6 @@ angular.module('graphing.demos.forcelayout', [
                 .links($scope.chartData.links)
                 .size([$scope.$width, $scope.$height])
                 .start()
-                .on 'tick', ->
-                    console.log 'Ticked'
-                    $scope.$digest()
-
 
 .value 'LesMisCoincidence',{
   "nodes":[

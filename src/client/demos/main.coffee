@@ -9,3 +9,5 @@ angular.module('graphing.demos', [
     'graphing.demos.boxplot'
     'graphing.demos.forcelayout'
 ])
+.config ($urlRouterProvider)->
+    $urlRouterProvider.otherwise '/line'

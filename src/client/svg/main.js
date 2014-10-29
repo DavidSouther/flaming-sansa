@@ -1,4 +1,5 @@
 angular.module('graphing.svg', [
+    'graphing.svg.d3',
     'graphing.svg.at',
     'graphing.svg.center',
     'graphing.svg.drawPath',

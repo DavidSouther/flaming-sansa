@@ -11,13 +11,13 @@
   "repository": "git://github.com/DavidSouther/flaming-sansa.git",
   "license": "ISC",
   "dependencies": {
-    "d3-util": "^3.4.13-u1",
-    "rupert-config-ionic": "^0.0.1"
+    "d3-util": "^3.4.13-u2",
+    "rupert-config-ionic": "^0.0.4"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
-    "rupert": "^0.1.0",
-    "rupert-grunt": "0.0.1"
+    "rupert": "^0.2.5",
+    "rupert-grunt": "^0.0.14"
   }
 }

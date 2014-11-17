@@ -1,9 +1,8 @@
 angular.module('graphing.demos', [
     'ionic'
 
-    'graphing.demos.controller'
-
     'graphing.demos.trig'
+    'graphing.demos.tension'
     'graphing.demos.line'
     'graphing.demos.bar'
     'graphing.demos.boxplot'
@@ -11,3 +10,7 @@ angular.module('graphing.demos', [
 ])
 .config ($urlRouterProvider)->
     $urlRouterProvider.otherwise '/line'
+.controller 'DemoList', ($scope, demos)->
+    $scope.demos = demos
+.controller 'DemoMenu', ($scope, $ionicSideMenuDelegate)->
+    $scope.open = -> $ionicSideMenuDelegate.toggleLeft()

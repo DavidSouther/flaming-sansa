@@ -32,7 +32,12 @@ angular.module('graphing.scales', [])
         ) - margins.topBottom;
 
         // Reset the scales
-        var $scales = {};
+        var $scales = function $scale(array){
+            return [
+                $scales.x(array[0]),
+                $scales.y(array[1])
+            ]
+        };
 
         // Evaluate the expression to get the scale params
 

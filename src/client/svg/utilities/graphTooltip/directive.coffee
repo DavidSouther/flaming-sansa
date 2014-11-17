@@ -1,5 +1,5 @@
 angular.module('graphing.svg.tooltip', [
-    'svg.graphTooltip.template'
+    'svg.utilities.graphTooltip.template'
 ])
 .value('DefaultTooltipTemplate', "<div>{{ tooltipData.text }}</div>")
 

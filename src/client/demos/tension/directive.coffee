@@ -5,14 +5,20 @@ class Vector2
         @x += v.x
         @y += v.y
         this
+    addc: (v)->
+        @clone().add(v)
     subtract: (v)->
         @x += v.x
         @y += v.y
         this
+    subtractc: (v)->
+        @clone().subtract(v)
     multiply: (n)->
         @x *= n
         @y *= n
         this
+    multiplyc: (n)->
+        @clone().multiply(n)
     length: ->
         Math.sqrt(@x * @x + @y * @y)
     direction: ->
@@ -35,25 +41,21 @@ Vector2.leftright = (a, b)->
     return 1
 
 class String
-    constructor: (@anchors = [new Vector2(0, 0), new Vector2(1, 0)])->
+    constructor: (@anchors = [new Vector2(-1, 0), new Vector2(0, 0), new Vector2(1, 0)])->
         @anchors[0].load = Vector2.ZERO
+        @anchors[2].load = Vector2.ZERO
         @anchors[1].load = Vector2.ZERO
-    addLoad: (position, weight)->
-        position =
-            if position instanceof Vector2
-                position
-            else
-                @anchors[@anchors.length - 1].clone()
-                .subtract(@anchors[0]).multiply(position)
-        position.y += weight
-        position.load = position.clone().add(Vector2.UP.clone().multiply(weight))
-        @anchors.push(position)
-        @anchors.sort(Vector2.leftright)
+        @addLoad 0.2
+
+    addLoad: (weight)->
+        @anchors[1].y += weight
+        @anchors[1].load = @anchors[1].addc(Vector2.UP.multiplyc(weight))
 
 angular.module('graphing.demos.tension', [
     'graphing.scales'
     'graphing.demos.demo'
     'demos.tension.template'
+    'demos.tension.visualization.template'
 ])
 .config (demosProvider)->
     demosProvider.demo 'tension',
@@ -61,6 +63,12 @@ angular.module('graphing.demos.tension', [
 .directive 'tensionDemo', ->
     restrict: 'E'
     templateUrl: 'demos/tension'
-.controller 'TensionCtrl', ($scope, ScaleSvc)->
+.controller 'TensionCtrl', ($scope, ScaleSvc, $ionicScrollDelegate)->
     $scope.string = string = new String()
-    string.addLoad(0.5, 1)
+    $scope.components = string.anchors[1].subtractc(string.anchors[0])
+    $scope.pull = ($event)->
+        string.addLoad $event.gesture.deltaY / 100
+        $scope.components = string.anchors[1].subtractc(string.anchors[0])
+
+        scrollPos = $ionicScrollDelegate.getScrollPosition().top
+        $ionicScrollDelegate.scrollTo(0, scrollPos, false)

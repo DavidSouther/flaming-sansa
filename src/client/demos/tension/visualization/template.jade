@@ -1,0 +1,26 @@
+svg(
+    width="200px"
+    height="200px"
+    style="display: block; margin: 0 auto"
+    shape-rendering="geometricPrecision"
+    graph-scales="{\
+        x: ['linear', -1.5, 1.5],\
+        y: ['linear', -0.5, 2.5]\
+    }"
+)
+    line(
+        ng-repeat-start="anchor in string.anchors"
+        ng-if="$index > 0"
+        from="$scales(string.anchors[$index - 1].array())"
+        to="$scales(anchor.array())"
+        stroke="purple"
+        stroke-width="2px"
+    )
+    vector(
+        ng-if="$index > 0 && $index < string.anchors.length - 1"
+        start="{{$scales(anchor.array())}}"
+        end="{{$scales(anchor.load.array())}}"
+        color="blue"
+        on-drag="pull($event)"
+        ng-repeat-end
+    )

@@ -1,27 +1,25 @@
 demo(title="Tension Demo")
-    svg(
-        width="200px"
-        height="200px"
-        ng-controller="TensionCtrl"
-        shape-rendering="geometricPrecision"
-        graph-scales="{\
-            x: ['linear', -0.5, 1.5],\
-            y: ['linear', -0.5, 1.5]\
-        }"
-    )
-        line(
-            ng-repeat-start="anchor in string.anchors"
-            ng-if="$index > 0"
-            from="$scales(string.anchors[$index - 1].array())"
-            to="$scales(anchor.array())"
-            stroke="purple"
-            stroke-width="2px"
-        )
-        vector(
-            ng-if="$index > 0 && $index < string.anchors.length - 1"
-            start="{{$scales(anchor.array())}}"
-            end="{{$scales(anchor.load.array())}}"
-            color="blue"
-            ng-repeat-end
-        )
-    
+    .row(ng-controller="TensionCtrl")
+        .col
+            .card.list
+                label.item
+                    b Force:
+                    | {{ 1 / (2 * Math.sin(components.direction())) | number:3 }} Newton
+                label.item
+                    b Angle:
+                    | {{ components.direction() | number:3 }} rad
+                label.item
+                    b Length:
+                    | {{ Math.abs(components.x) | number:3 }}
+                label.item
+                    b Height:
+                    | {{ Math.abs(components.y) | number:3 }}
+            
+        .col
+            .card.list
+                .item
+                    ng-include(src="'demos/tension/visualization'")
+                .item
+                    label.item
+                        b Raw:
+                        pre {{ string|json }}

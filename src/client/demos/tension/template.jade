@@ -2,12 +2,19 @@ demo(title="Tension Demo")
     .row(ng-controller="TensionCtrl")
         .col
             .card.list
+                label.item.item-input
+                    span.input-label Weight:
+                    input(
+                        type="number"
+                        ng-model="string.anchors[1].load.y"
+                    )
+                    | Newton
                 label.item
-                    b Force:
-                    | {{ 1 / (2 * Math.sin(components.direction())) | number:3 }} Newton
+                    b Tension:
+                    | {{ Math.abs(string.anchors[1].load.y / (2 * Math.sin(components.direction()))) | number:3 }} Newton
                 label.item
                     b Angle:
-                    | {{ components.direction() | number:3 }} rad
+                    | {{ 90 + (components.direction() * 180 / Math.PI) | number:3 }} deg
                 label.item
                     b Length:
                     | {{ Math.abs(components.x) | number:3 }}

@@ -51,6 +51,10 @@ class String
         @anchors[1].y += weight
         @anchors[1].load = @anchors[1].addc(Vector2.UP.multiplyc(weight))
 
+    setLoad: (weight)->
+        @anchors[1].y = weight
+        # @anchors[1].load = @anchors[1].addc(Vector2.UP.multiplyc(weight))
+
 angular.module('graphing.demos.tension', [
     'graphing.scales'
     'graphing.demos.demo'
@@ -66,8 +70,9 @@ angular.module('graphing.demos.tension', [
 .controller 'TensionCtrl', ($scope, ScaleSvc, $ionicScrollDelegate)->
     $scope.string = string = new String()
     $scope.components = string.anchors[1].subtractc(string.anchors[0])
-    $scope.pull = ($event)->
-        string.addLoad $event.gesture.deltaY / 100
+    $scope.pull = (distance)->
+        console.log distance
+        string.setLoad distance
         $scope.components = string.anchors[1].subtractc(string.anchors[0])
 
         scrollPos = $ionicScrollDelegate.getScrollPosition().top

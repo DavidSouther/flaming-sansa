@@ -41,7 +41,13 @@ Vector2.leftright = (a, b)->
     return 1
 
 class String
-    constructor: (@anchors = [new Vector2(-1, 0), new Vector2(0, 0), new Vector2(1, 0)])->
+    constructor: (
+        @anchors = [
+            new Vector2(-1, 0),
+            new Vector2(0, 0),
+            new Vector2(1, 0)
+        ]
+    )->
         @anchors[0].load = Vector2.ZERO
         @anchors[2].load = Vector2.ZERO
         @anchors[1].load = Vector2.ZERO

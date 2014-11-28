@@ -1,5 +1,4 @@
-/* global d3_svg_lineHermite: true */
-/* global d3_svg_lineMonotoneTangents: true */
+/* global d3: true */
 
 angular.module('graphing.svg.path', [
 

@@ -1,3 +1,4 @@
+/* global d3: true */
 angular.module('graphing.svg.d3', [
 
 ]).run(function($rootScope){
@@ -16,5 +17,5 @@ angular.module('graphing.svg.d3', [
             };
         });
         return dispatch;
-    }
+    };
 });

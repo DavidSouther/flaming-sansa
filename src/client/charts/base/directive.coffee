@@ -9,13 +9,13 @@ class BaseChart
             else if angular.isFunction @$scope.chartOptions.x
                 @$scope.chartOptions.x
             else
-                (_, i)=> _
+                (_, i)-> _
             y: if angular.isString @$scope.chartOptions.y
                 (_)=> _[@$scope.chartOptions.y]
             else if angular.isFunction @$scope.chartOptions.y
                 @$scope.chartOptions.y
             else
-                (_, i)=> i
+                (_, i)-> i
 
             range: @$scope.chartOptions.range or {}
             axis: @$scope.chartOptions.axis or {}
@@ -42,9 +42,10 @@ class BaseChart
         @$scope.$chartOptions.range.x.min or= @$scope.$chartData.$x.$min
         @$scope.$chartOptions.range.x.max or= @$scope.$chartData.$x.$max
 
-        if @$scope.$chartOptions.domain
-            @$scope.$chartOptions.range.y.min or= @$scope.$chartOptions.domain[0]
-            @$scope.$chartOptions.range.y.max or= @$scope.$chartOptions.domain[1]
+        opts = @$scope.$chartOptions
+        if opts.domain
+            @$scope.$chartOptions.range.y.min or= opts.domain[0]
+            @$scope.$chartOptions.range.y.max or= opts.domain[1]
         else
             @$scope.$chartOptions.range.y.min or= @$scope.$chartData.$y.$min
             @$scope.$chartOptions.range.y.max or= @$scope.$chartData.$y.$max

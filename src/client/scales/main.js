@@ -1,3 +1,4 @@
+/* global d3: true */
 angular.module('graphing.scales', [])
 .run(function($window, $rootScope){
     /* Do angular things when the window resizes. */
@@ -36,7 +37,7 @@ angular.module('graphing.scales', [])
             return [
                 $scales.x(array[0]),
                 $scales.y(array[1])
-            ]
+            ];
         };
 
         // Evaluate the expression to get the scale params

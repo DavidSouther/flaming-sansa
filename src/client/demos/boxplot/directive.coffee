@@ -36,8 +36,10 @@ angular.module('graphing.demos.boxplot', [
         iqr = (q3 - q1) * k
         i = -1
         j = d.length
+
         `while (d[++i] < q1 - iqr)`
         `while (d[--j] > q3 + iqr)`
+
         [i, j]
 
 .value 'BoxplotData',

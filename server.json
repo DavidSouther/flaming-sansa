@@ -6,6 +6,16 @@
         "vendors": {
             "prefix": [ "./node_modules" ],
             "js": [ "d3-util/d3.js" ]
+        },
+        "scripts": {
+            "types": [
+                "main",
+                "provider",
+                "filter",
+                "service",
+                "controller",
+                "directive"
+            ]
         }
     }
 }

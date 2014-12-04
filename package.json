@@ -1,6 +1,6 @@
 {
   "name": "flaming-sansa",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Angular SVG Primitives and Graphs",
   "main": "index.js",
   "scripts": {

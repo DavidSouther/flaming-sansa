@@ -14,9 +14,10 @@
     "d3-util": "^3.4.13-u2"
   },
   "devDependencies": {
+    "angular-builds": "^1.3.5",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "rupert": "^0.2.5",
-    "rupert-grunt": "^0.0.14"
+    "rupert-grunt": "^0.0.15"
   }
 }

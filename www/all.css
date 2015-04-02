@@ -28,29 +28,6 @@ bar-chart {
   display: block;
 }
 
-div.BoxPlot {
-  display: inline-block;
-  width: 100%;
-  height: 100%;
-}
-.box {
-  font: 10px sans-serif;
-}
-.box line,
-.box rect,
-.box circle {
-  fill: #fff;
-  stroke: #000;
-  stroke-width: 1.5px;
-}
-.box .center {
-  stroke-dasharray: 3, 3;
-}
-.box .outlier {
-  fill: none;
-  stroke: #ccc;
-}
-
 .scatter .point {
   -webkit-transition: 1s linear opacity;
   -moz-transition: 1s linear opacity;
@@ -76,6 +53,29 @@ div.BoxPlot {
 }
 .scatter circle {
   fill: #fff;
+}
+
+div.BoxPlot {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+.box {
+  font: 10px sans-serif;
+}
+.box line,
+.box rect,
+.box circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+.box .center {
+  stroke-dasharray: 3, 3;
+}
+.box .outlier {
+  fill: none;
+  stroke: #ccc;
 }
 
 .drawPath {

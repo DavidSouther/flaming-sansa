@@ -1,3 +1,8 @@
+(function() {
+  angular.module('graphing.animation', ['graphing.animation.style']);
+
+}).call(this);
+
 (function(){
 angular.module('graphing', [
   'graphing.svg',
@@ -36,11 +41,12 @@ angular.module('graphing.scales', [])
         margins.topBottom = margins.top + margins.bottom;
 
         // Get the bounds of the parent element
+        var bounds = e.getBoundingClientRect();
         var height = (
-            e.offsetHeight || e.clientHeight
+            bounds.height || e.offsetHeight || e.clientHeight || e.scrollHeight
         ) - margins.leftRight;
         var width = (
-            e.offsetWidth || e.clientWidth
+            bounds.width || e.offsetWidth || e.clientWidth || e.scrollWidth
         ) - margins.topBottom;
 
         // Reset the scales
